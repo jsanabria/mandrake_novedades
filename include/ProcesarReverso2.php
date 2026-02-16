@@ -1,0 +1,66 @@
+<?php
+session_start();
+
+include "connect.php"; 
+
+$id = $_REQUEST["id"];
+
+$txtNota = isset($_REQUEST["txtNota"]) ? trim($_REQUEST["txtNota"]) : "";
+if(strlen($txtNota) < 20) {
+	// window.location = "../AbonoList";
+	echo '<script>alert("Debe indicar las razones por la cuales va a realizar este reverso. Coloque mínimo 20 caracteres..."); window.history.back();</script>';
+	die();
+}
+
+$sql = "INSERT INTO abono2
+			(id, cliente, fecha, metodo_pago, pago, nota, username)
+		SELECT 
+			NULL, cliente, fecha, 'IMPRIMIR' AS metodo_pago, 0 AS pago, 'REVERSO id: $id' AS nota, username 
+		FROM recarga2 WHERE id = $id;"; 
+mysqli_query($link, $sql);
+
+$sql = "SELECT LAST_INSERT_ID() AS abono;"; 
+$rs = mysqli_query($link, $sql);
+$row = mysqli_fetch_array($rs);
+$Abono = $row["abono"];
+
+$sql = "INSERT INTO recarga2
+			(id, cliente, fecha, metodo_pago, referencia, reverso, 
+			monto_moneda, moneda, tasa_moneda, monto_bs, tasa_usd, monto_usd, saldo, 
+			nota, username, cobro_cliente_reverso, nro_recibo, nota_recepcion, abono)
+		SELECT 
+			NULL, cliente, fecha, metodo_pago, referencia, 'S' AS reverso, 
+			monto_moneda, moneda, tasa_moneda, (-1)*monto_bs, tasa_usd, (-1)*monto_usd, 0 AS saldo, 
+			'$txtNota' AS nota, username, cobro_cliente_reverso, nro_recibo, nota_recepcion, $Abono AS abono
+			FROM recarga2 WHERE id = $id;";
+mysqli_query($link, $sql);
+$sql = "SELECT LAST_INSERT_ID() AS recarga;";
+$rs = mysqli_query($link, $sql);
+$row = mysqli_fetch_array($rs);
+$recarga = $row["recarga"];
+
+$sql = "SELECT cliente FROM recarga2 WHERE id = $recarga;";
+$rs = mysqli_query($link, $sql);
+$row = mysqli_fetch_array($rs);
+$cliente = $row["cliente"];
+
+$sql = "SELECT IFNULL(SUM(monto_usd), 0) AS saldo FROM recarga2 WHERE cliente = $cliente;";
+$rs = mysqli_query($link, $sql);
+$row = mysqli_fetch_array($rs);
+$saldo = $row["saldo"];
+
+$sql = "UPDATE recarga2 SET saldo = $saldo WHERE id = $recarga;";
+mysqli_query($link, $sql);
+
+
+$sql = "SELECT SUM(monto_usd) AS pago FROM recarga2 WHERE abono = $Abono;";
+$rs = mysqli_query($link, $sql);
+$row = mysqli_fetch_array($rs);
+$monto_abono = $row["pago"];
+
+$sql = "UPDATE abono2 SET pago = $monto_abono WHERE id = $Abono";
+mysqli_query($link, $sql);
+
+
+header("Location: ../Abono2List");
+?>

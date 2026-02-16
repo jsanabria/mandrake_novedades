@@ -1,0 +1,19 @@
+NOVEDADES LOCAL: 
+
+http://localhost:9090/mandrake_novedades/wssync/syncAPI.php?user=365&dbName=mandrake_novedades&app=articulo
+
+http://localhost:9090/mandrake_novedades/wssync/syncAPI.php?user=365&dbName=mandrake_novedades&app=tarifa
+
+http://localhost:9090/mandrake_novedades/wssync/syncAPI.php?user=365&dbName=mandrake_novedades&app=tarifa_articulo
+
+http://localhost:9090/mandrake_novedades/wssync/syncAPI.php?user=365&dbName=mandrake_novedades&app=compra
+
+http://localhost:9090/mandrake_novedades/wssync/syncAPI.php?user=365&dbName=mandrake_novedades&app=compra_detalle&numero=206
+
+
+NOVEDADES WEB: 
+
+https://www.dropharmadm.com/dropharma/wssicm_medrikha/sicmAPI.php?user=365&app=factura&numero=FACT-023843
+
+https://www.dropharmadm.com/dropharma/wssicm_medrikha/sicmAPI.php?user=365&app=factura_detalle&numero=FACT-023843
+

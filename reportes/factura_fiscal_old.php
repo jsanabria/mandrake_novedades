@@ -1,0 +1,480 @@
+<?php
+session_start(); 
+
+require('rcs/fpdf.php');
+require("../include/connect.php");
+
+//echo exec("FiscalPrinter\FiscalPrinter PR 45 username");
+//die();
+
+$id = isset($_REQUEST["id"])?$_REQUEST["id"]:"0";
+$GLOBALS["CurrentUserName"] = isset($_REQUEST["username"])?$_REQUEST["username"]:"";
+
+$sql = "SELECT 
+			id, date_format(fecha, '%d/%m/%Y') as fecha, cliente, nro_documento, tipo_documento, estatus, cliente, username, documento, monto_base_igtf     
+		FROM salidas where id = '$id'"; 
+$rs = mysqli_query($link, $sql);
+$row = mysqli_fetch_array($rs);
+$GLOBALS["invoice"] = $row["nro_documento"];
+$GLOBALS["cliente"] = $row["cliente"];
+$GLOBALS["fecha"] = $row["fecha"];
+$GLOBALS["tipo_documento"] = $row["tipo_documento"];
+$GLOBALS["nro_documento"] = $row["nro_documento"];
+$GLOBALS["estatus"] = $row["estatus"];
+$GLOBALS["direccion_cia"] = "";
+$GLOBALS["username"] = $row["username"];
+
+$documento = $row["documento"];
+
+$username = $GLOBALS["CurrentUserName"];
+
+// exec("C:\Users\Junior\Documents\Visual Studio 2015\Projects\novedades\bin\Debug\Venezuela Demo VB.NET 2.0.exe");
+echo exec("FiscalPrinter\FiscalPrinter $documento $id $username");
+
+die("FiscalPrinter\FiscalPrinter $documento $id $username");
+
+
+$MaquinaFiscal = new DOTNET("MaquinaFiscal, Version=1.0.0.1, Culture=Neutral, PublicKeyToken=642221e538850e80", "MaquinaFiscal.Impresora");
+//$MaquinaFiscal = new DOTNET("MaquinaFiscal, Version=v4.0_1.0.0.1, Culture=Neutral, PublicKeyToken=642221e538850e80", "MaquinaFiscal.Impresora");
+//$MaquinaFiscal = new DOTNET("MaquinaFiscal, Version=1.0.0.0, Culture=Neutral, PublicKeyToken=642221e538850e80", "MaquinaFiscal.Impresora");
+
+$MaquinaFiscal->imprimirFactura("Hello World y más nada... Hay que hacer que funcione con el Frame Work 4 en adelante");
+
+
+//liberando el objeto
+$MaquinaFiscal = null;
+
+die("Hello World ...");
+
+
+
+$cliente = $row["cliente"];
+
+class PDF extends FPDF
+{
+	// Cabecera de página
+	function Header()
+	{
+		// Consulto datos de la compañía 
+		require("../include/connect.php");
+		$sql = "SELECT id FROM compania ORDER BY id ASC LIMIT 0,1;";
+		$rs = mysqli_query($link, $sql);
+		$row = mysqli_fetch_array($rs);
+		$cia =  $row["id"];
+
+
+		$sql = "SELECT 
+					b.campo_descripcion AS banco, 
+					a.titular AS titular, 
+					a.tipo, 
+					a.numero 
+				FROM 
+					compania_cuenta AS a 
+					LEFT OUTER JOIN tabla AS b ON b.campo_codigo = a.banco AND b.tabla = 'BANCO' 
+				WHERE 
+					a.compania = '$cia' AND a.mostrar = 'S' AND a.activo = 'S';";
+		$rs = mysqli_query($link, $sql);
+		$row = mysqli_fetch_array($rs);
+		$GLOBALS["cta_cia"] =  $row["numero"];
+
+
+		$sql = "SELECT 
+					a.ci_rif, a.nombre, b.campo_descripcion AS ciudad, 
+					a.direccion, a.telefono1, a.email1, logo  
+				FROM 
+					compania AS a 
+					LEFT OUTER JOIN tabla AS b ON b.campo_codigo = a.ciudad AND b.tabla = 'CIUDAD' 
+				WHERE a.id = '$cia';";
+		$rs = mysqli_query($link, $sql);
+		$row = mysqli_fetch_array($rs);
+		$ciudad = $row["ciudad"];
+		$direccion = $row["direccion"]; 
+		$GLOBALS["direccion_cia"] = $direccion;
+		$cia =  $row["nombre"];
+		$logo =  $row["logo"];
+		$ci_rif = $row["ci_rif"];
+
+		
+		
+		$sql = "SELECT 
+					a.id, a.ci_rif, a.nombre, 
+					a.email1, a.direccion, b.campo_descripcion AS ciudad, 
+					CONCAT(ifnull(a.telefono1,''), ' ', ifnull(a.telefono2,'')) as telf 
+				FROM cliente AS a 
+					LEFT OUTER JOIN tabla AS b ON b.campo_codigo = a.ciudad AND b.tabla = 'CIUDAD' 
+				WHERE a.id = '" . $GLOBALS["cliente"] . "';"; 
+		$rs = mysqli_query($link, $sql);
+		$row = mysqli_fetch_array($rs);
+		
+		$rif = $row["ci_rif"];
+		$razon_social = $row["nombre"];
+		$rif = $row["ci_rif"];
+		$direccion_cliente = $row["direccion"]; 
+		$ciudad_cliente = $row["ciudad"]; 
+		$telf = $row["telf"]; 
+
+		$sql = "SELECT descripcion FROM tipo_documento WHERE codigo = '" . $GLOBALS["tipo_documento"] . "';";
+		$rs = mysqli_query($link, $sql);
+		$row = mysqli_fetch_array($rs);
+
+		/*if(trim($logo) != "") {
+			$this->Image("../carpetacarga/$logo", 10, 10, 50);
+		}*/
+
+		$this->Ln(10);
+		
+		/*$this->SetFont('Arial','B',10);
+		$this->Cell(200, 6, $row["descripcion"],0,0,'C');*/
+		
+
+
+		$this->Ln(8);
+		
+		$this->SetFont('Arial','',8);
+		
+		$this->Cell(10, 5);
+		$this->Cell(50, 5, utf8_decode($cia),0,0,'L');
+		$this->SetFont('Arial','',8);
+		$this->Cell(140, 5, "Nro. Factura: " . $GLOBALS["nro_documento"],0,0,'R');
+
+		$this->Ln();
+		$this->Cell(10, 5);
+		$this->SetFont('Arial','',8);
+		$this->Cell(100, 5, "R.I.F: $ci_rif", 0, 0, "L");
+		$this->SetFont('Arial','',8);
+		//$this->Cell(50, 5, "CIUDAD: $ciudad",0,0,'R');
+		$this->Cell(90, 5, "FECHA: " . $GLOBALS["fecha"],0,0,'R');
+
+		$this->Ln();
+
+		$this->Cell(10, 4);
+		$this->Cell(30, 4,"CLIENTE: ",'0','0','L');
+		$this->Cell(120, 4, $razon_social,'0','0','L');
+		$this->Cell(40, 4, "User: " . $GLOBALS['username'], 0, 0, 'R');
+	
+
+		$this->Ln();
+		$this->Cell(10, 4);
+		$this->Cell(30, 4,'DIRECCION: ','0','0','L');
+		$this->MultiCell(160, 4, "$direccion_cliente. $ciudad_cliente", '0', 'L');
+
+		$this->Cell(10, 5);
+		$this->Cell(70,5,'R.I.F.: ' . $rif,'0',0,'L');
+		$this->Cell(80,5,'Telf:'.  $telf,'0','0','L');
+		$this->Cell(50,5,'CONTADO','0',0,'C');
+
+		require("../include/desconnect.php");
+		$this->Ln(6);
+
+		$this->Cell(10, 5);
+		$this->Cell(20, 5, "CODIGO", 1, 0, 'L');
+		$this->Cell(105, 5, "ARTICULO", 1, 0, 'L');
+		$this->Cell(15, 5, "CANT", 1, 0, 'C');
+		$this->Cell(25, 5, "PRECIO", 1, 0, 'R');
+		$this->Cell(25, 5, "TOTAL", 1, 0, 'R');
+		$this->Ln(6);
+	}
+	
+	// Pie de página
+	function Footer()
+	{
+		// Posición: a 1,5 cm del final
+		//////$this->SetY(-15);
+		// Arial italic 8
+		//////$this->SetFont('Arial','I',8);
+		// Número de página
+		//////$this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
+	}
+	
+	function EndReport($id_invoice)
+	{
+
+		$asociado = "";
+		require("../include/connect.php");
+		$doc = "";
+
+		$sql = "SELECT 
+					a.alicuota_iva, 
+					a.iva,
+					a.monto_total, 
+					a.total, 
+					a.nota, a.doc_afectado,  
+					a.moneda, 
+					a.asesor, a.id_documento_padre, 
+					a.monto_usd, IFNULL(a.tasa_dia, 0) AS tasa_dia, a.descuento, a.monto_sin_descuento, a.unidades, 
+					a.nro_despacho  
+				FROM salidas a where a.id = '$id_invoice'"; 
+		$rs = mysqli_query($link, $sql);
+		$row = mysqli_fetch_array($rs);
+		$alicuota = $row["alicuota_iva"];
+		$nota = utf8_decode($row["nota"]);
+		$doc_afectado = utf8_decode($row["doc_afectado"]);
+		$moneda = utf8_decode($row["moneda"]);
+		$asesor = utf8_decode($row["asesor"]);
+		$monto_total = $row["monto_total"];
+		$monto_sin_descuento = $row["monto_sin_descuento"];
+
+		$id_documento_padre = $row["id_documento_padre"];
+
+		$monto_usd = $row["monto_usd"];
+		$tasa_dia = $row["tasa_dia"];
+		if($tasa_dia == 0) $tasa_dia = 1;
+
+		$descuento = floatval($row["descuento"]);
+
+		$unidades = $row["unidades"];
+		$nro_despacho = $row["nro_despacho"];
+
+		$sql = "SELECT
+					SUM(precio) AS precio, 
+					SUM(IF(IFNULL(alicuota,0)=0, precio, 0)) AS exento, 
+					SUM(IF(IFNULL(alicuota,0)=0, 0, precio)) AS gravado,
+					SUM(IF(IFNULL(alicuota,0)=0, precio - (precio * ($descuento/100)), 0)) AS exento_2, 
+					SUM(IF(IFNULL(alicuota,0)=0, 0, precio - (precio * ($descuento/100)))) AS gravado_2, 
+					SUM(IF(IFNULL(alicuota,0)=0, 0, precio - (precio * ($descuento/100))) * (IFNULL(alicuota,0)/100)) AS iva, 
+					SUM(IF(IFNULL(alicuota,0)=0, precio - (precio * ($descuento/100)), 0)) + SUM(IF(IFNULL(alicuota,0)=0, 0, precio - (precio * ($descuento/100)))) + (SUM(IF(IFNULL(alicuota,0)=0, 0, precio - (precio * ($descuento/100))) * (IFNULL(alicuota,0)/100))) AS total 
+				FROM entradas_salidas
+				WHERE tipo_documento = 'TDCFCV' AND 
+					id_documento = '$id_invoice'"; 
+		$rs = mysqli_query($link, $sql);
+		$row = mysqli_fetch_array($rs);
+
+		$sql2 = "SELECT b.descripcion, a.nro_documento
+				FROM salidas AS a JOIN tipo_documento AS b ON b.codigo = a.tipo_documento 
+				 where a.id = '$id_documento_padre';";
+		$rs2 = mysqli_query($link, $sql2);
+		$sw = false;
+		while($row2 = mysqli_fetch_array($rs2)) {
+			$doc .= " #" . $row2["nro_documento"];
+			$tdoc = $row2["descripcion"];
+			$sw = true;
+		}
+
+		if($sw) $asociado = "Documento(s) Asociado(s): $tdoc $doc / ";
+
+		$this->Ln(110-$this->GetY());
+
+		
+
+		$this->SetFont('Arial','B',8);
+		$this->Cell(159, 4, "SUB-TOTAL:", 0, 0, 'R');
+		$this->SetFont('Arial','',8);
+		$this->Cell(40, 4, number_format($row["exento"]+$row["gravado"], 2, ",", "."), 0, 0, 'R');
+		//$this->Cell(19, 4, number_format(($row["exento"]+$row["gravado"])/$tasa_dia, 2, ",", "."), 0, 0, 'R');
+		$this->Ln(4);
+
+
+		// Se imprime el descuento si aplica
+		if($descuento > 0) {
+			$this->SetFont('Arial','BI',8);
+			$this->Cell(101,4, "", 0, 0, 'R');
+			$this->SetFont('Arial','B',8);
+
+			$this->Cell(58,4, "Descuento " . number_format($descuento, 2, ",", ".") . "% Adicional:", 0, 0, 'R');
+			$this->SetFont('Arial','',8);
+			//$this->Cell(40, 4, number_format($monto_total, 2, ",", "."), 0, 0, 'R');
+			$monto_descuento = (-1) * (($row["exento"]*($descuento/100)) + ($row["gravado"]*($descuento/100)));
+			$this->Cell(40, 4, number_format($monto_descuento, 2, ",", "."), 0, 0, 'R');
+			//$this->Cell(19, 4, number_format($monto_descuento/$tasa_dia, 2, ",", "."), 0, 0, 'R');
+			$this->Ln(4);
+
+			$this->SetFont('Arial','B',8);
+			$this->Cell(159, 4, $asociado . " " . "TOTAL EXENTO:", 0, 0, 'R');
+			$this->SetFont('Arial','',8);
+			$this->Cell(40, 4, number_format($row["exento"]-($row["exento"]*($descuento/100)), 2, ",", "."), 0, 0, 'R');
+			//$this->Cell(19, 4, number_format(($row["exento"]-($row["exento"]*($descuento/100)))/$tasa_dia, 2, ",", "."), 0, 0, 'R');
+			$this->Ln(4);
+
+			$this->SetFont('Arial','BI',10);
+			$this->Cell(20,4, "", 0, 0, 'R');
+			$this->Cell(51,4, "I.G.T.F. 3%: USD " . number_format($monto_usd+($monto_usd*(3/100)), 2, ",", "."), 0, 0, 'L');
+			$this->Cell(40,4, "TC: " . number_format($tasa_dia, 2, ",", "."), 0, 0, 'C');
+			$this->SetFont('Arial','B',8);
+
+			$this->Cell(48,4, "TOTAL BASE IMPONIBLE:", 0, 0, 'R');
+			$this->SetFont('Arial','',8);
+			$this->Cell(40, 4, number_format($row["gravado"]-($row["gravado"]*($descuento/100)), 2, ",", "."), 0, 0, 'R');
+			//$this->Cell(19, 4, number_format(($row["gravado"]-($row["gravado"]*($descuento/100)))/$tasa_dia, 2, ",", "."), 0, 0, 'R');
+			$this->Ln(4);
+		} 
+		else {
+			$this->SetFont('Arial','B',8);
+			$this->Cell(159, 4, $asociado . " " . "TOTAL EXENTO:", 0, 0, 'R');
+			$this->SetFont('Arial','',8);
+			$this->Cell(40, 4, number_format($row["exento"], 2, ",", "."), 0, 0, 'R');
+			//$this->Cell(19, 4, number_format($row["exento"]/$tasa_dia, 2, ",", "."), 0, 0, 'R');
+			$this->Ln(4);
+
+			$this->SetFont('Arial','BI',8);
+			$this->Cell(10,4, "", 0, 0, 'R');
+			$this->Cell(51,4, "I.G.T.F. 3%: USD " . number_format($monto_usd+($monto_usd*(3/100)), 2, ",", "."), 0, 0, 'L');
+			$this->Cell(40,4, "TC: " . number_format($tasa_dia, 2, ",", "."), 0, 0, 'C');
+			$this->SetFont('Arial','B',8);
+
+			$this->Cell(58,4, "TOTAL BASE IMPONIBLE:", 0, 0, 'R');
+			$this->SetFont('Arial','',8);
+			$this->Cell(40, 4, number_format($row["gravado"], 2, ",", "."), 0, 0, 'R');
+			//$this->Cell(19, 4, number_format($row["gravado"]/$tasa_dia, 2, ",", "."), 0, 0, 'R');
+			$this->Ln(4);
+		}
+		//
+
+		$this->SetFont('Arial','',6);
+		$this->Cell(101, 4, "Tasa de cambio Publicada por el B.C.V. según la fecha de emisión de esta factura.", 0, 0, 'C');
+
+		$this->SetFont('Arial','B',8);
+		$this->Cell(58,4, "IVA:", 0, 0, 'R');
+		$this->SetFont('Arial','',8);
+
+		$this->Cell(40, 4, number_format($row["iva"], 2, ",", "."), 0, 0, 'R');
+		//$this->Cell(19, 4, number_format($row["iva"]/$tasa_dia, 2, ",", "."), 0, 0, 'R');
+		$this->Ln(4);
+		$this->SetFont('Arial','B',7);
+		$this->Cell(5, 4);
+		$this->Cell(110, 4, "IGFT Sujeto a Pago Recibido (Efectivo $) según Art 1 GO 42339 17/03/2022.", 0, 0, 'R');
+		$this->SetFont('Arial','B',8);
+		//$this->Cell(34, 4, "TOTAL $moneda/USD $:", 0, 0, 'R');
+		$this->Cell(44, 4, "TOTAL Bs.:", 0, 0, 'R');
+		$this->SetFont('Arial','',8);
+		$this->Cell(40, 4, number_format($row["total"], 2, ",", "."), 0, 0, 'R');
+		//$this->Cell(19, 4, number_format($row["total"]/$tasa_dia, 2, ",", "."), 0, 0, 'R');
+
+		$IGFT_por_bs = floatval($row["total"]) * (3/100);
+		$IGFT_bs = floatval($row["total"]) + $IGFT_por_bs;
+		$IGFT_por_usd = floatval($row["total"]/$tasa_dia) * (3/100);
+		$IGFT_usd = floatval($row["total"]/$tasa_dia) + $IGFT_por_usd;
+		
+		/*$this->ln();
+		$this->SetFont('Arial','B',8);
+		$this->Cell(30, 4, "Unidades:$unidades", 0, 0, 'C');
+		$this->Cell(71, 4, strtoupper($nota), 0, 0, 'R');
+		if(trim($nro_despacho) != "") { $this->Cell(90, 4, "Nro. Despacho Psicotrópico: " . $nro_despacho, 0, 0, 'C'); } */
+		
+		require("../include/desconnect.php");
+	}
+}
+
+// Creación del objeto de la clase heredada
+$pdf = new PDF('P', 'mm', 'Letter');
+$pdf->SetMargins(2,10,10);
+$pdf->AliasNbPages();
+$pdf->AddPage();
+$pdf->SetFont('Arial','',8);
+
+
+// CONCAT(IFNULL(c.nombre, ''), ' - ', IFNULL(b.principio_activo, ''), ' ', IFNULL(b.presentacion, ''), ' ', IFNULL(b.nombre_comercial, '')) AS articulo, 
+$sql = "SELECT 
+			b.codigo,  
+			CONCAT(IFNULL(b.principio_activo, ''), ' ', IFNULL(b.presentacion, ''), ' ', IFNULL(b.nombre_comercial, '')) AS articulo, 
+			a.cantidad_articulo AS cantidad, 
+			(SELECT descripcion FROM unidad_medida WHERE codigo = a.articulo_unidad_medida) AS unidad_medida, 
+			(SELECT alicuota FROM alicuota WHERE codigo = b.alicuota AND activo = 'S') alicuota, 
+			a.costo_unidad, 
+			a.costo, 
+			a.lote, date_format(a.fecha_vencimiento, '%d/%m/%Y') AS fecha_vencimiento, 
+			a.precio_unidad, a.precio, b.codigo_ims 
+		FROM 
+			entradas_salidas AS a 
+			LEFT OUTER JOIN articulo AS b ON b.id = a.articulo 
+			LEFT OUTER JOIN fabricante AS c ON c.Id = a.fabricante 
+		WHERE 
+			a.id_documento = '$id' AND a.tipo_documento = '" . $GLOBALS["tipo_documento"] . "'
+		ORDER BY a.articulo DESC;"; 
+
+$rs = mysqli_query($link, $sql) or die(mysqli_error());
+$items = 0;
+while($row = mysqli_fetch_array($rs))
+{
+	$pdf->SetFont('Arial', '', 8);
+	$pdf->Cell(10, 4);
+	$pdf->Cell(20, 4, $row["codigo_ims"], 0, 0, 'L');
+	$pdf->Cell(105, 4, substr($row["articulo"], 0, 60), 0, 0, 'L');
+
+	/*
+	if(strlen($row["articulo"]) < 55) 
+		$pdf->Cell(105, 4, $row["articulo"], 0, 0, 'L');
+	else 
+		$pdf->Cell(105, 4, substr($row["articulo"], 0, 55), 0, 0, 'L');
+	*/
+
+	$pdf->Cell(15, 4, round($row["cantidad"], 0), 0, 0, 'C');
+	$pdf->Cell(25, 4, number_format($row["precio_unidad"], 2, ",", "."), 0, 0, 'R');
+	$pdf->Cell(25, 4, number_format($row["precio"], 2, ",", "."), 0, 0, 'R');
+
+	/*
+	if(strlen($row["articulo"]) >= 55) {
+		$pdf->Ln();
+		$pdf->Cell(30, 4);
+		$pdf->MultiCell(100, 4, substr($row["articulo"], 55, strlen($row["articulo"])), 0, 'L');
+	}
+	else $pdf->Ln();
+	*/
+	$pdf->Ln();
+
+	if($pdf->GetY() > 110) $pdf->AddPage();
+	$items++;
+}
+
+/*
+$sql = "SELECT id, saldo FROM recarga WHERE cliente = $cliente ORDER BY id DESC LIMIT 0, 1;";
+
+$rs = mysqli_query($link, $sql);
+$saldo_actual = "";
+if($row = mysqli_fetch_array($rs)) $saldo_actual = "\n(Saldo actual abonos: *** USD " . number_format($row["saldo"], 2, ".", ",") . " ***)";
+
+
+$sql = "SELECT 
+			b.metodo_pago, IF(b.metodo_pago = 'RC', '', b.referencia) AS referencia, b.monto_moneda, b.moneda, 
+			b.monto_usd, c.nro_recibo, c.monto_usd  
+		FROM 
+			cobros_cliente AS a 
+			JOIN cobros_cliente_detalle AS b ON b.cobros_cliente = a.id 
+			LEFT OUTER JOIN recarga AS c ON c.cobro_cliente_reverso = a.id 
+		WHERE a.id_documento = $id;"; 
+$rs = mysqli_query($link, $sql) or die(mysqli_error());
+$pdf->Cell(10, 4);
+$pdf->Cell(20, 4, "TIPO", "B", 0, 'L');
+$pdf->Cell(20, 4, "REF. #", "B", 0, 'L');
+$pdf->Cell(20, 4, "MONTO", "B", 0, 'R');
+$pdf->SetFont('Arial', 'B', 8);
+$pdf->Cell(60, 4);
+$pdf->Cell(70, 4, $saldo_actual, 0, 0, 'C');
+$pdf->Ln();
+
+$recibo = "";
+$sw = false;
+while($row = mysqli_fetch_array($rs))
+{
+	$sql = "SELECT valor2 FROM parametro WHERE codigo = '009' AND valor1 = '" . $row["metodo_pago"] . "';";
+	$rs2 = mysqli_query($link, $sql) or die(mysqli_error());
+	$row2 = mysqli_fetch_array($rs2);
+
+	$pdf->SetFont('Arial', '', 8);
+	$pdf->Cell(10, 4);
+	$pdf->Cell(20, 4, substr($row2["valor2"], 0, 11), 0, 0, 'L');
+	$pdf->Cell(20, 4, $row["referencia"], 0, 0, 'L');
+	$pdf->Cell(20, 4, $row["moneda"] . " " . $row["monto_moneda"], 0, 0, 'R');
+
+	if(trim($row["nro_recibo"]) != "") {
+		if($sw == false) {
+			$pdf->SetFont('Arial','B',8);
+			$recibo = str_pad($row["nro_recibo"], 7, "0", STR_PAD_LEFT) . " / USD " . number_format($row["monto_usd"], 2, ".", ",");
+			$pdf->Cell(60, 4);
+			$pdf->Cell(70, 4, "Nro. RECIBO: " . $recibo, 0, 0, 'C');
+			$pdf->SetFont('Arial','',8);
+			$sw = true;
+		}
+	}
+
+	$pdf->Ln();
+
+}
+*/
+
+$pdf->EndReport($id);
+
+	
+require("../include/desconnect.php");
+
+$pdf->Output();
+?>

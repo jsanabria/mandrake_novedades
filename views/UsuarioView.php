@@ -1,0 +1,185 @@
+<?php
+
+namespace PHPMaker2021\mandrake;
+
+// Page object
+$UsuarioView = &$Page;
+?>
+<?php if (!$Page->isExport()) { ?>
+<script>
+var currentForm, currentPageID;
+var fusuarioview;
+loadjs.ready("head", function () {
+    var $ = jQuery;
+    // Form object
+    currentPageID = ew.PAGE_ID = "view";
+    fusuarioview = currentForm = new ew.Form("fusuarioview", "view");
+    loadjs.done("fusuarioview");
+});
+</script>
+<script>
+loadjs.ready("head", function () {
+    // Write your table-specific client script here, no need to add script tags.
+});
+</script>
+<?php } ?>
+<script>
+if (!ew.vars.tables.usuario) ew.vars.tables.usuario = <?= JsonEncode(GetClientVar("tables", "usuario")) ?>;
+</script>
+<?php if (!$Page->isExport()) { ?>
+<div class="btn-toolbar ew-toolbar">
+<?php $Page->ExportOptions->render("body") ?>
+<?php $Page->OtherOptions->render("body") ?>
+<div class="clearfix"></div>
+</div>
+<?php } ?>
+<?php $Page->showPageHeader(); ?>
+<?php
+$Page->showMessage();
+?>
+<?php if (!$Page->IsModal) { ?>
+<?php if (!$Page->isExport()) { ?>
+<form name="ew-pager-form" class="form-inline ew-form ew-pager-form" action="<?= CurrentPageUrl(false) ?>">
+<?= $Page->Pager->render() ?>
+<div class="clearfix"></div>
+</form>
+<?php } ?>
+<?php } ?>
+<form name="fusuarioview" id="fusuarioview" class="form-inline ew-form ew-view-form" action="<?= CurrentPageUrl(false) ?>" method="post">
+<?php if (Config("CHECK_TOKEN")) { ?>
+<input type="hidden" name="<?= $TokenNameKey ?>" value="<?= $TokenName ?>"><!-- CSRF token name -->
+<input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
+<?php } ?>
+<input type="hidden" name="t" value="usuario">
+<input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
+<table class="table table-striped table-sm ew-view-table">
+<?php if ($Page->_username->Visible) { // username ?>
+    <tr id="r__username">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_usuario__username"><?= $Page->_username->caption() ?></span></td>
+        <td data-name="_username" <?= $Page->_username->cellAttributes() ?>>
+<span id="el_usuario__username">
+<span<?= $Page->_username->viewAttributes() ?>>
+<?= $Page->_username->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->nombre->Visible) { // nombre ?>
+    <tr id="r_nombre">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_usuario_nombre"><?= $Page->nombre->caption() ?></span></td>
+        <td data-name="nombre" <?= $Page->nombre->cellAttributes() ?>>
+<span id="el_usuario_nombre">
+<span<?= $Page->nombre->viewAttributes() ?>>
+<?= $Page->nombre->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->telefono->Visible) { // telefono ?>
+    <tr id="r_telefono">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_usuario_telefono"><?= $Page->telefono->caption() ?></span></td>
+        <td data-name="telefono" <?= $Page->telefono->cellAttributes() ?>>
+<span id="el_usuario_telefono">
+<span<?= $Page->telefono->viewAttributes() ?>>
+<?= $Page->telefono->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->_email->Visible) { // email ?>
+    <tr id="r__email">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_usuario__email"><?= $Page->_email->caption() ?></span></td>
+        <td data-name="_email" <?= $Page->_email->cellAttributes() ?>>
+<span id="el_usuario__email">
+<span<?= $Page->_email->viewAttributes() ?>>
+<?= $Page->_email->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->userlevelid->Visible) { // userlevelid ?>
+    <tr id="r_userlevelid">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_usuario_userlevelid"><?= $Page->userlevelid->caption() ?></span></td>
+        <td data-name="userlevelid" <?= $Page->userlevelid->cellAttributes() ?>>
+<span id="el_usuario_userlevelid">
+<span<?= $Page->userlevelid->viewAttributes() ?>>
+<?= $Page->userlevelid->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->asesor->Visible) { // asesor ?>
+    <tr id="r_asesor">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_usuario_asesor"><?= $Page->asesor->caption() ?></span></td>
+        <td data-name="asesor" <?= $Page->asesor->cellAttributes() ?>>
+<span id="el_usuario_asesor">
+<span<?= $Page->asesor->viewAttributes() ?>>
+<?= $Page->asesor->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->cliente->Visible) { // cliente ?>
+    <tr id="r_cliente">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_usuario_cliente"><?= $Page->cliente->caption() ?></span></td>
+        <td data-name="cliente" <?= $Page->cliente->cellAttributes() ?>>
+<span id="el_usuario_cliente">
+<span<?= $Page->cliente->viewAttributes() ?>>
+<?= $Page->cliente->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->proveedor->Visible) { // proveedor ?>
+    <tr id="r_proveedor">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_usuario_proveedor"><?= $Page->proveedor->caption() ?></span></td>
+        <td data-name="proveedor" <?= $Page->proveedor->cellAttributes() ?>>
+<span id="el_usuario_proveedor">
+<span<?= $Page->proveedor->viewAttributes() ?>>
+<?= $Page->proveedor->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->foto->Visible) { // foto ?>
+    <tr id="r_foto">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_usuario_foto"><?= $Page->foto->caption() ?></span></td>
+        <td data-name="foto" <?= $Page->foto->cellAttributes() ?>>
+<span id="el_usuario_foto">
+<span>
+<?= GetFileViewTag($Page->foto, $Page->foto->getViewValue(), false) ?>
+</span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->activo->Visible) { // activo ?>
+    <tr id="r_activo">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_usuario_activo"><?= $Page->activo->caption() ?></span></td>
+        <td data-name="activo" <?= $Page->activo->cellAttributes() ?>>
+<span id="el_usuario_activo">
+<span<?= $Page->activo->viewAttributes() ?>>
+<?= $Page->activo->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+</table>
+<?php if (!$Page->IsModal) { ?>
+<?php if (!$Page->isExport()) { ?>
+<?= $Page->Pager->render() ?>
+<div class="clearfix"></div>
+<?php } ?>
+<?php } ?>
+</form>
+<?php
+$Page->showPageFooter();
+echo GetDebugMessage();
+?>
+<?php if (!$Page->isExport()) { ?>
+<script>
+loadjs.ready("load", function () {
+    // Write your table-specific startup script here, no need to add script tags.
+});
+</script>
+<?php } ?>

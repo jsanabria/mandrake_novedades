@@ -1,0 +1,179 @@
+<?php
+
+namespace PHPMaker2021\mandrake;
+
+// Page object
+$ContLotesPagosDelete = &$Page;
+?>
+<script>
+var currentForm, currentPageID;
+var fcont_lotes_pagosdelete;
+loadjs.ready("head", function () {
+    var $ = jQuery;
+    // Form object
+    currentPageID = ew.PAGE_ID = "delete";
+    fcont_lotes_pagosdelete = currentForm = new ew.Form("fcont_lotes_pagosdelete", "delete");
+    loadjs.done("fcont_lotes_pagosdelete");
+});
+</script>
+<script>
+loadjs.ready("head", function () {
+    // Write your table-specific client script here, no need to add script tags.
+});
+</script>
+<script>
+if (!ew.vars.tables.cont_lotes_pagos) ew.vars.tables.cont_lotes_pagos = <?= JsonEncode(GetClientVar("tables", "cont_lotes_pagos")) ?>;
+</script>
+<?php $Page->showPageHeader(); ?>
+<?php
+$Page->showMessage();
+?>
+<form name="fcont_lotes_pagosdelete" id="fcont_lotes_pagosdelete" class="form-inline ew-form ew-delete-form" action="<?= CurrentPageUrl(false) ?>" method="post">
+<?php if (Config("CHECK_TOKEN")) { ?>
+<input type="hidden" name="<?= $TokenNameKey ?>" value="<?= $TokenName ?>"><!-- CSRF token name -->
+<input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
+<?php } ?>
+<input type="hidden" name="t" value="cont_lotes_pagos">
+<input type="hidden" name="action" id="action" value="delete">
+<?php foreach ($Page->RecKeys as $key) { ?>
+<?php $keyvalue = is_array($key) ? implode(Config("COMPOSITE_KEY_SEPARATOR"), $key) : $key; ?>
+<input type="hidden" name="key_m[]" value="<?= HtmlEncode($keyvalue) ?>">
+<?php } ?>
+<div class="card ew-card ew-grid">
+<div class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
+<table class="table ew-table">
+    <thead>
+    <tr class="ew-table-header">
+<?php if ($Page->id->Visible) { // id ?>
+        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_cont_lotes_pagos_id" class="cont_lotes_pagos_id"><?= $Page->id->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->fecha->Visible) { // fecha ?>
+        <th class="<?= $Page->fecha->headerCellClass() ?>"><span id="elh_cont_lotes_pagos_fecha" class="cont_lotes_pagos_fecha"><?= $Page->fecha->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->banco->Visible) { // banco ?>
+        <th class="<?= $Page->banco->headerCellClass() ?>"><span id="elh_cont_lotes_pagos_banco" class="cont_lotes_pagos_banco"><?= $Page->banco->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->referencia->Visible) { // referencia ?>
+        <th class="<?= $Page->referencia->headerCellClass() ?>"><span id="elh_cont_lotes_pagos_referencia" class="cont_lotes_pagos_referencia"><?= $Page->referencia->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->moneda->Visible) { // moneda ?>
+        <th class="<?= $Page->moneda->headerCellClass() ?>"><span id="elh_cont_lotes_pagos_moneda" class="cont_lotes_pagos_moneda"><?= $Page->moneda->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->procesado->Visible) { // procesado ?>
+        <th class="<?= $Page->procesado->headerCellClass() ?>"><span id="elh_cont_lotes_pagos_procesado" class="cont_lotes_pagos_procesado"><?= $Page->procesado->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->nota->Visible) { // nota ?>
+        <th class="<?= $Page->nota->headerCellClass() ?>"><span id="elh_cont_lotes_pagos_nota" class="cont_lotes_pagos_nota"><?= $Page->nota->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->usuario->Visible) { // usuario ?>
+        <th class="<?= $Page->usuario->headerCellClass() ?>"><span id="elh_cont_lotes_pagos_usuario" class="cont_lotes_pagos_usuario"><?= $Page->usuario->caption() ?></span></th>
+<?php } ?>
+    </tr>
+    </thead>
+    <tbody>
+<?php
+$Page->RecordCount = 0;
+$i = 0;
+while (!$Page->Recordset->EOF) {
+    $Page->RecordCount++;
+    $Page->RowCount++;
+
+    // Set row properties
+    $Page->resetAttributes();
+    $Page->RowType = ROWTYPE_VIEW; // View
+
+    // Get the field contents
+    $Page->loadRowValues($Page->Recordset);
+
+    // Render row
+    $Page->renderRow();
+?>
+    <tr <?= $Page->rowAttributes() ?>>
+<?php if ($Page->id->Visible) { // id ?>
+        <td <?= $Page->id->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_cont_lotes_pagos_id" class="cont_lotes_pagos_id">
+<span<?= $Page->id->viewAttributes() ?>>
+<?= $Page->id->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->fecha->Visible) { // fecha ?>
+        <td <?= $Page->fecha->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_cont_lotes_pagos_fecha" class="cont_lotes_pagos_fecha">
+<span<?= $Page->fecha->viewAttributes() ?>>
+<?= $Page->fecha->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->banco->Visible) { // banco ?>
+        <td <?= $Page->banco->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_cont_lotes_pagos_banco" class="cont_lotes_pagos_banco">
+<span<?= $Page->banco->viewAttributes() ?>>
+<?= $Page->banco->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->referencia->Visible) { // referencia ?>
+        <td <?= $Page->referencia->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_cont_lotes_pagos_referencia" class="cont_lotes_pagos_referencia">
+<span<?= $Page->referencia->viewAttributes() ?>>
+<?= $Page->referencia->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->moneda->Visible) { // moneda ?>
+        <td <?= $Page->moneda->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_cont_lotes_pagos_moneda" class="cont_lotes_pagos_moneda">
+<span<?= $Page->moneda->viewAttributes() ?>>
+<?= $Page->moneda->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->procesado->Visible) { // procesado ?>
+        <td <?= $Page->procesado->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_cont_lotes_pagos_procesado" class="cont_lotes_pagos_procesado">
+<span<?= $Page->procesado->viewAttributes() ?>>
+<?= $Page->procesado->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->nota->Visible) { // nota ?>
+        <td <?= $Page->nota->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_cont_lotes_pagos_nota" class="cont_lotes_pagos_nota">
+<span<?= $Page->nota->viewAttributes() ?>>
+<?= $Page->nota->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->usuario->Visible) { // usuario ?>
+        <td <?= $Page->usuario->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_cont_lotes_pagos_usuario" class="cont_lotes_pagos_usuario">
+<span<?= $Page->usuario->viewAttributes() ?>>
+<?= $Page->usuario->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+    </tr>
+<?php
+    $Page->Recordset->moveNext();
+}
+$Page->Recordset->close();
+?>
+</tbody>
+</table>
+</div>
+</div>
+<div>
+<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit"><?= $Language->phrase("DeleteBtn") ?></button>
+<button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" data-href="<?= HtmlEncode(GetUrl($Page->getReturnUrl())) ?>"><?= $Language->phrase("CancelBtn") ?></button>
+</div>
+</form>
+<?php
+$Page->showPageFooter();
+echo GetDebugMessage();
+?>
+<script>
+loadjs.ready("load", function () {
+    // Write your table-specific startup script here, no need to add script tags.
+});
+</script>

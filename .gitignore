@@ -1,0 +1,40 @@
+# Dependencias PHP/Node
+/vendor/
+/node_modules/
+/composer.phar
+
+# Builds/Cache/Logs/Temp
+/storage/
+/logs/
+/tmp/
+/temp/
+/cache/
+/coverage/
+
+# Subidas/Respaldos/Grandes
+/uploads/
+/media/
+/public/uploads/
+/backups/
+/*.sql
+*.sql
+*.zip
+*.rar
+*.7z
+*.bak
+*.tar
+*.gz
+
+# Config local/secretos
+.env
+.env.*
+config.local.php
+
+# SO/IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Artefactos varios
+*.log

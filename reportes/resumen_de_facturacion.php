@@ -1,0 +1,180 @@
+<?php
+session_start();
+
+require('rcs/fpdf.php');
+require("../include/connect.php");
+
+$xtitulo = isset($_REQUEST["xtitulo"])?$_REQUEST["xtitulo"]:"";
+$xcliente = isset($_REQUEST["xcliente"])?$_REQUEST["xcliente"]:"0";
+$xfecha = isset($_REQUEST["xfecha"])?$_REQUEST["xfecha"]:"0";
+$yfecha = isset($_REQUEST["yfecha"])?$_REQUEST["yfecha"]:"0";
+
+
+$xfecha = str_replace("/", "-", $xfecha);
+$yfecha = str_replace("/", "-", $yfecha);
+
+$xfecha = substr($xfecha, 0, 10);
+$yfecha = substr($yfecha, 0, 10);
+
+$xF = explode("-", $xfecha);
+$xfecha = $xF[2] . "-" . $xF[1] . "-" . $xF[0];
+
+$xF = explode("-", $yfecha);
+$yfecha = $xF[2] . "-" . $xF[1] . "-" . $xF[0];
+
+/*
+$xfecha = substr($xfecha, 0, 10);
+$yfecha = substr($yfecha, 0, 10);
+
+$xF = explode("/", $xfecha);
+$xfecha = $xF[2] . "-" . $xF[1] . "-" . $xF[0];
+
+$xF = explode("/", $yfecha);
+$yfecha = $xF[2] . "-" . $xF[1] . "-" . $xF[0];
+*/
+$GLOBALS["titulo"] = $xtitulo;
+
+
+class PDF extends FPDF
+{
+	// Cabecera de página
+	function Header()
+	{
+		// Consulto datos de la compañía 
+		require("../include/connect.php");
+		$sql = "SELECT id FROM compania ORDER BY id ASC LIMIT 0,1;";
+		$rs = mysqli_query($link, $sql);
+		$row = mysqli_fetch_array($rs);
+		$cia =  $row["id"];
+
+		$sql = "SELECT 
+					a.ci_rif, a.nombre, b.campo_descripcion AS ciudad, 
+					a.direccion, a.telefono1, a.email1, logo  
+				FROM 
+					compania AS a 
+					LEFT OUTER JOIN tabla AS b ON b.campo_codigo = a.ciudad AND b.tabla = 'CIUDAD' 
+				WHERE a.id = '$cia';"; 
+		$rs = mysqli_query($link, $sql);
+		$row = mysqli_fetch_array($rs);
+		$ciudad = $row["ciudad"];
+		$direccion = $row["direccion"]; 
+		$cia =  $row["nombre"];
+		$logo =  $row["logo"];
+
+		
+		if(trim($logo) != "") {
+			$this->Image("../carpetacarga/$logo", 10, 10, 50);
+		}
+		
+		$this->Ln(8);
+		$this->SetFont('Arial','',8);
+		$this->Cell(200, 5, "Fecha: " . date("d/m/Y"),0,0,'R');
+		$this->Ln();
+		$this->Cell(200, 5, "Hora: " . date("H:i:s"),0,0,'R');
+
+		$this->Ln(20);
+		
+		$this->SetFont('Arial','B',14);
+		$this->Cell(200, 6, utf8_decode($GLOBALS["titulo"]),0,0,'C');
+		$this->SetFont('Arial','',12);
+		$this->Ln();
+		$this->Cell(200, 6, "Desde " . $_REQUEST["xfecha"] . " Hasta " . $_REQUEST["yfecha"],0,0,'C');
+		$this->SetFont('Arial','',8);		
+
+
+		$this->Ln(8);
+		
+
+		require("../include/desconnect.php");
+		$this->Ln(6);
+
+		$this->Cell(10, 6);
+		$this->Cell(20, 6, "DOCUMENTO", 1, 0, 'L');
+		$this->Cell(20, 6, "FECHA", 1, 0, 'L');
+		$this->Cell(20, 6, "DOC.", 1, 0, 'L');
+		$this->Cell(60, 6, "CLIENTE", 1, 0, 'L');
+		$this->Cell(25, 6, "MONTO", 1, 0, 'R');
+		$this->Cell(20, 6, "IVA", 1, 0, 'R');
+		$this->Cell(25, 6, "TOTAL", 1, 0, 'R');
+		$this->Ln(6);
+	}
+	
+	// Pie de página
+	function Footer()
+	{
+		// Posición: a 1,5 cm del final
+		$this->SetY(-15);
+		// Arial italic 8
+		$this->SetFont('Arial','I',8);
+		// Número de página
+		$this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
+	}
+	
+	function EndReport($Total, $granTotal, $graniva, $items, $xfecha, $yfecha)
+	{
+		//$this->AddPage();
+		//require("../connect.php");
+		$this->SetFont('Arial','B',8);
+		$this->Ln();
+		$this->Cell(130, 5, "TOTAL Documentos: "  . $items, 0, 0, 'R');
+		$this->Cell(25, 6, number_format($Total, 2, ".", ","), 1, 0, 'R');
+		$this->Cell(20, 6, number_format($graniva, 2, ".", ","), 1, 0, 'R');
+		$this->Cell(25, 6, number_format($granTotal, 2, ".", ","), 1, 0, 'R');
+	}
+}
+
+// Creación del objeto de la clase heredada
+$pdf = new PDF('P', 'mm', 'Letter');
+$pdf->SetMargins(2,10,10);
+$pdf->AliasNbPages();
+$pdf->AddPage();
+$pdf->SetFont('Arial','',8);
+
+if(intval($xcliente) == 0) $xcliente = " ";
+else $xcliente = "a.cliente = '$xcliente' AND ";
+
+$sql = "SELECT 
+			c.nombre AS usuario, date_format(a.fecha, '%d/%m/%Y') AS fecha, b.nombre AS cliente, 
+			a.nro_documento, 
+			if(a.documento='NC', (-1)*a.monto_total, a.monto_total) AS monto_total, 
+			if(a.documento='NC', (-1)*a.iva, a.iva) AS iva, 
+			if(a.documento='NC', (-1)*a.total, a.total) total, a.estatus, a.moneda, a.documento 
+		FROM 
+			salidas AS a 
+			LEFT OUTER JOIN cliente AS b ON b.id = a.cliente 
+			LEFT OUTER JOIN usuario AS c ON c.username = a.username 
+		WHERE 
+			a.tipo_documento = 'TDCFCV' AND $xcliente  
+			a.fecha BETWEEN '$xfecha 00:00:00' AND '$yfecha 23:59:59' AND a.estatus = 'PROCESADO' ORDER BY a.id ASC;"; 
+
+$rs = mysqli_query($link, $sql) or die(mysqli_error());
+$items = 0;
+$Total = 0;
+$granTotal = 0;
+$graniva = 0;
+while($row = mysqli_fetch_array($rs))
+{
+	$pdf->SetFont('Arial', '', 8);
+
+	$pdf->Cell(10, 4);
+	$pdf->Cell(20, 4, $row["documento"], 0, 0, 'L');
+	$pdf->Cell(20, 4, $row["fecha"], 0, 0, 'L');
+	$pdf->Cell(20, 4, $row["nro_documento"], 0, 0, 'L');
+	$pdf->Cell(60, 4, substr($row["cliente"], 0, 35), 0, 0, 'L');
+	$pdf->Cell(25, 4, number_format($row["monto_total"], 2, ".", ","), 0, 0, 'R');
+	$pdf->Cell(20, 4, number_format($row["iva"], 2, ".", ","), 0, 0, 'R');
+	$pdf->Cell(25, 4, number_format($row["total"], 2, ".", ","), 0, 0, 'R');
+	$pdf->Ln();
+	$items++;
+	$Total += floatval($row["monto_total"]);
+	$granTotal += floatval($row["total"]);
+	$graniva += floatval($row["iva"]);
+}
+
+$pdf->EndReport($Total, $granTotal, $graniva, $items, $xfecha, $yfecha);
+
+	
+require("../include/desconnect.php");
+
+$pdf->Output();
+?>

@@ -298,17 +298,6 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->ci_rif->Visible) { // ci_rif ?>
-    <tr id="r_ci_rif">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_salidas_ci_rif"><?= $Page->ci_rif->caption() ?></span></td>
-        <td data-name="ci_rif" <?= $Page->ci_rif->cellAttributes() ?>>
-<span id="el_salidas_ci_rif">
-<span<?= $Page->ci_rif->viewAttributes() ?>>
-<?= $Page->ci_rif->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->nro_despacho->Visible) { // nro_despacho ?>
     <tr id="r_nro_despacho">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_salidas_nro_despacho"><?= $Page->nro_despacho->caption() ?></span></td>

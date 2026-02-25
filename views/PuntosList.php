@@ -29,7 +29,8 @@ loadjs.ready("head", function () {
     fpuntoslistsrch.addFields([
         ["id", [], fields.id.isInvalid],
         ["cliente", [ew.Validators.integer], fields.cliente.isInvalid],
-        ["fecha", [], fields.fecha.isInvalid],
+        ["fecha", [ew.Validators.datetime(7)], fields.fecha.isInvalid],
+        ["y_fecha", [ew.Validators.between], false],
         ["tipo", [], fields.tipo.isInvalid],
         ["nro_documento", [], fields.nro_documento.isInvalid],
         ["referencia", [], fields.referencia.isInvalid],
@@ -75,6 +76,7 @@ loadjs.ready("head", function () {
 
     // Dynamic selection lists
     fpuntoslistsrch.lists.cliente = <?= $Page->cliente->toClientList($Page) ?>;
+    fpuntoslistsrch.lists.tipo = <?= $Page->tipo->toClientList($Page) ?>;
     fpuntoslistsrch.lists.referencia = <?= $Page->referencia->toClientList($Page) ?>;
 
     // Filters
@@ -186,6 +188,96 @@ loadjs.ready(["fpuntoslistsrch"], function() {
 });
 </script>
 <?= $Page->cliente->Lookup->getParamTag($Page, "p_x_cliente") ?>
+</span>
+    </div>
+    <?php if ($Page->SearchColumnCount % $Page->SearchFieldsPerRow == 0) { ?>
+</div>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->fecha->Visible) { // fecha ?>
+    <?php
+        $Page->SearchColumnCount++;
+        if (($Page->SearchColumnCount - 1) % $Page->SearchFieldsPerRow == 0) {
+            $Page->SearchRowCount++;
+    ?>
+<div id="xsr_<?= $Page->SearchRowCount ?>" class="ew-row d-sm-flex">
+    <?php
+        }
+     ?>
+    <div id="xsc_fecha" class="ew-cell form-group">
+        <label for="x_fecha" class="ew-search-caption ew-label"><?= $Page->fecha->caption() ?></label>
+        <span class="ew-search-operator">
+<?= $Language->phrase("BETWEEN") ?>
+<input type="hidden" name="z_fecha" id="z_fecha" value="BETWEEN">
+</span>
+        <span id="el_puntos_fecha" class="ew-search-field">
+<input type="<?= $Page->fecha->getInputTextType() ?>" data-table="puntos" data-field="x_fecha" data-format="7" name="x_fecha" id="x_fecha" maxlength="10" placeholder="<?= HtmlEncode($Page->fecha->getPlaceHolder()) ?>" value="<?= $Page->fecha->EditValue ?>"<?= $Page->fecha->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->fecha->getErrorMessage(false) ?></div>
+<?php if (!$Page->fecha->ReadOnly && !$Page->fecha->Disabled && !isset($Page->fecha->EditAttrs["readonly"]) && !isset($Page->fecha->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fpuntoslistsrch", "datetimepicker"], function() {
+    ew.createDateTimePicker("fpuntoslistsrch", "x_fecha", {"ignoreReadonly":true,"useCurrent":false,"format":7});
+});
+</script>
+<?php } ?>
+</span>
+        <span class="ew-search-and"><label><?= $Language->phrase("AND") ?></label></span>
+        <span id="el2_puntos_fecha" class="ew-search-field2">
+<input type="<?= $Page->fecha->getInputTextType() ?>" data-table="puntos" data-field="x_fecha" data-format="7" name="y_fecha" id="y_fecha" maxlength="10" placeholder="<?= HtmlEncode($Page->fecha->getPlaceHolder()) ?>" value="<?= $Page->fecha->EditValue2 ?>"<?= $Page->fecha->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->fecha->getErrorMessage(false) ?></div>
+<?php if (!$Page->fecha->ReadOnly && !$Page->fecha->Disabled && !isset($Page->fecha->EditAttrs["readonly"]) && !isset($Page->fecha->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fpuntoslistsrch", "datetimepicker"], function() {
+    ew.createDateTimePicker("fpuntoslistsrch", "y_fecha", {"ignoreReadonly":true,"useCurrent":false,"format":7});
+});
+</script>
+<?php } ?>
+</span>
+    </div>
+    <?php if ($Page->SearchColumnCount % $Page->SearchFieldsPerRow == 0) { ?>
+</div>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->tipo->Visible) { // tipo ?>
+    <?php
+        $Page->SearchColumnCount++;
+        if (($Page->SearchColumnCount - 1) % $Page->SearchFieldsPerRow == 0) {
+            $Page->SearchRowCount++;
+    ?>
+<div id="xsr_<?= $Page->SearchRowCount ?>" class="ew-row d-sm-flex">
+    <?php
+        }
+     ?>
+    <div id="xsc_tipo" class="ew-cell form-group">
+        <label for="x_tipo" class="ew-search-caption ew-label"><?= $Page->tipo->caption() ?></label>
+        <span class="ew-search-operator">
+<?= $Language->phrase("=") ?>
+<input type="hidden" name="z_tipo" id="z_tipo" value="=">
+</span>
+        <span id="el_puntos_tipo" class="ew-search-field">
+    <select
+        id="x_tipo"
+        name="x_tipo"
+        class="form-control ew-select<?= $Page->tipo->isInvalidClass() ?>"
+        data-select2-id="puntos_x_tipo"
+        data-table="puntos"
+        data-field="x_tipo"
+        data-value-separator="<?= $Page->tipo->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->tipo->getPlaceHolder()) ?>"
+        <?= $Page->tipo->editAttributes() ?>>
+        <?= $Page->tipo->selectOptionListHtml("x_tipo") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Page->tipo->getErrorMessage(false) ?></div>
+<?= $Page->tipo->Lookup->getParamTag($Page, "p_x_tipo") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='puntos_x_tipo']"),
+        options = { name: "x_tipo", selectId: "puntos_x_tipo", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.puntos.fields.tipo.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
     </div>
     <?php if ($Page->SearchColumnCount % $Page->SearchFieldsPerRow == 0) { ?>

@@ -43,7 +43,8 @@ loadjs.ready("head", function () {
         ["estatus", [], fields.estatus.isInvalid],
         ["asesor", [], fields.asesor.isInvalid],
         ["unidades", [], fields.unidades.isInvalid],
-        ["nro_despacho", [], fields.nro_despacho.isInvalid]
+        ["nro_despacho", [], fields.nro_despacho.isInvalid],
+        ["pago_premio", [], fields.pago_premio.isInvalid]
     ]);
 
     // Set invalid fields
@@ -556,6 +557,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->nro_despacho->Visible) { // nro_despacho ?>
         <th data-name="nro_despacho" class="<?= $Page->nro_despacho->headerCellClass() ?>"><div id="elh_salidas_nro_despacho" class="salidas_nro_despacho"><?= $Page->renderSort($Page->nro_despacho) ?></div></th>
 <?php } ?>
+<?php if ($Page->pago_premio->Visible) { // pago_premio ?>
+        <th data-name="pago_premio" class="<?= $Page->pago_premio->headerCellClass() ?>"><div id="elh_salidas_pago_premio" class="salidas_pago_premio"><?= $Page->renderSort($Page->pago_premio) ?></div></th>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -748,6 +752,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_salidas_nro_despacho">
 <span<?= $Page->nro_despacho->viewAttributes() ?>>
 <?= $Page->nro_despacho->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->pago_premio->Visible) { // pago_premio ?>
+        <td data-name="pago_premio" <?= $Page->pago_premio->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_salidas_pago_premio">
+<span<?= $Page->pago_premio->viewAttributes() ?>>
+<?= $Page->pago_premio->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

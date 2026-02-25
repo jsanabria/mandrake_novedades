@@ -1430,9 +1430,6 @@ SORTHTML;
      		$sql = "SELECT MAX(CAST(IFNULL(nro_documento, 0) AS UNSIGNED)) AS consecutivo FROM salidas WHERE tipo_documento = 'TDCNET';";
      		$row = ExecuteRow($sql);
      		$consecutivo = intval($row["consecutivo"]) + 1; 
-     		$sql = "SELECT MAX(CAST(IFNULL(nro_documento, 0) AS UNSIGNED)) AS consecutivo FROM salidas WHERE tipo_documento = 'TDCNET';";
-     		$row = ExecuteRow($sql);
-     		$consecutivo = intval($row["consecutivo"]) + 1; 
      		$nro_documento = str_pad($consecutivo, 7, "0", STR_PAD_LEFT);
     	    $sql = "SELECT tasa FROM tasa_usd WHERE moneda = 'USD' ORDER BY id DESC LIMIT 0, 1;";
        		$tasa = floatval(ExecuteScalar($sql));
@@ -1492,7 +1489,7 @@ SORTHTML;
        		$sql = "INSERT INTO cobros_cliente
        					(id, cliente, id_documento, fecha, pago, moneda, fecha_registro, username)
        				VALUES
-       					(NULL, $cliente, $newid, '$fecha', $precio, '', '$fecha', '$user')";
+       					(NULL, $cliente, $newid, '$fecha', $precio, 'USD', '$fecha', '$user')";
        		Execute($sql);
        		$newcobro = ExecuteScalar("SELECT LAST_INSERT_ID();");
        		$monto_bs = $precio*$tasa;
@@ -1519,6 +1516,12 @@ SORTHTML;
        					(NULL, 1, '$nro_documento', '$nro_documento', '" . date("Y-m-d") . "', '$nota',
        					'N', 0, $precio, 0, 0, $precio,
        					'" . date("Y-m-d H:i:s") . "', '" . CurrentUserName() . "', 'N', 'NE');";
+       		Execute($sql);
+
+       		/*** Obtengo el nro de la nota de entrega para actualizarlos en la tabal de puntos ***/
+       		$sql = "SELECT nro_documento FROM salidas WHERE id = $newid;";
+       		$nro_documento = ExecuteScalar($sql);
+       		$sql = "UPDATE puntos SET nro_documento='$nro_documento' WHERE id = $id;";
        		Execute($sql);
      	}
     	/*** ***/

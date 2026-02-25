@@ -507,7 +507,7 @@ class SalidasAdd extends Salidas
         $this->descuento->setVisibility();
         $this->monto_sin_descuento->Visible = false;
         $this->factura->Visible = false;
-        $this->ci_rif->setVisibility();
+        $this->ci_rif->Visible = false;
         $this->nombre->Visible = false;
         $this->direccion->Visible = false;
         $this->telefono->Visible = false;
@@ -864,16 +864,6 @@ class SalidasAdd extends Salidas
             }
         }
 
-        // Check field name 'ci_rif' first before field var 'x_ci_rif'
-        $val = $CurrentForm->hasValue("ci_rif") ? $CurrentForm->getValue("ci_rif") : $CurrentForm->getValue("x_ci_rif");
-        if (!$this->ci_rif->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->ci_rif->Visible = false; // Disable update for API request
-            } else {
-                $this->ci_rif->setFormValue($val);
-            }
-        }
-
         // Check field name 'nro_despacho' first before field var 'x_nro_despacho'
         $val = $CurrentForm->hasValue("nro_despacho") ? $CurrentForm->getValue("nro_despacho") : $CurrentForm->getValue("x_nro_despacho");
         if (!$this->nro_despacho->IsDetailKey) {
@@ -911,7 +901,6 @@ class SalidasAdd extends Salidas
         $this->nota->CurrentValue = $this->nota->FormValue;
         $this->asesor->CurrentValue = $this->asesor->FormValue;
         $this->descuento->CurrentValue = $this->descuento->FormValue;
-        $this->ci_rif->CurrentValue = $this->ci_rif->FormValue;
         $this->nro_despacho->CurrentValue = $this->nro_despacho->FormValue;
         $this->igtf->CurrentValue = $this->igtf->FormValue;
     }
@@ -1416,14 +1405,6 @@ class SalidasAdd extends Salidas
             $this->descuento->CssClass = "font-weight-bold";
             $this->descuento->ViewCustomAttributes = "";
 
-            // ci_rif
-            if (strval($this->ci_rif->CurrentValue) != "") {
-                $this->ci_rif->ViewValue = $this->ci_rif->optionCaption($this->ci_rif->CurrentValue);
-            } else {
-                $this->ci_rif->ViewValue = null;
-            }
-            $this->ci_rif->ViewCustomAttributes = "";
-
             // nro_despacho
             $this->nro_despacho->ViewValue = $this->nro_despacho->CurrentValue;
             $this->nro_despacho->ViewCustomAttributes = "";
@@ -1498,11 +1479,6 @@ class SalidasAdd extends Salidas
             $this->descuento->LinkCustomAttributes = "";
             $this->descuento->HrefValue = "";
             $this->descuento->TooltipValue = "";
-
-            // ci_rif
-            $this->ci_rif->LinkCustomAttributes = "";
-            $this->ci_rif->HrefValue = "";
-            $this->ci_rif->TooltipValue = "";
 
             // nro_despacho
             $this->nro_despacho->LinkCustomAttributes = "";
@@ -1687,11 +1663,6 @@ class SalidasAdd extends Salidas
             }
             $this->descuento->PlaceHolder = RemoveHtml($this->descuento->caption());
 
-            // ci_rif
-            $this->ci_rif->EditCustomAttributes = "";
-            $this->ci_rif->EditValue = $this->ci_rif->options(false);
-            $this->ci_rif->PlaceHolder = RemoveHtml($this->ci_rif->caption());
-
             // nro_despacho
             $this->nro_despacho->EditAttrs["class"] = "form-control";
             $this->nro_despacho->EditCustomAttributes = "";
@@ -1744,10 +1715,6 @@ class SalidasAdd extends Salidas
             // descuento
             $this->descuento->LinkCustomAttributes = "";
             $this->descuento->HrefValue = "";
-
-            // ci_rif
-            $this->ci_rif->LinkCustomAttributes = "";
-            $this->ci_rif->HrefValue = "";
 
             // nro_despacho
             $this->nro_despacho->LinkCustomAttributes = "";
@@ -1827,11 +1794,6 @@ class SalidasAdd extends Salidas
         if (!CheckNumber($this->descuento->FormValue)) {
             $this->descuento->addErrorMessage($this->descuento->getErrorMessage(false));
         }
-        if ($this->ci_rif->Required) {
-            if ($this->ci_rif->FormValue == "") {
-                $this->ci_rif->addErrorMessage(str_replace("%s", $this->ci_rif->caption(), $this->ci_rif->RequiredErrorMessage));
-            }
-        }
         if ($this->nro_despacho->Required) {
             if (!$this->nro_despacho->IsDetailKey && EmptyValue($this->nro_despacho->FormValue)) {
                 $this->nro_despacho->addErrorMessage(str_replace("%s", $this->nro_despacho->caption(), $this->nro_despacho->RequiredErrorMessage));
@@ -1909,9 +1871,6 @@ class SalidasAdd extends Salidas
 
         // descuento
         $this->descuento->setDbValueDef($rsnew, $this->descuento->CurrentValue, null, false);
-
-        // ci_rif
-        $this->ci_rif->setDbValueDef($rsnew, $this->ci_rif->CurrentValue, null, false);
 
         // nro_despacho
         $this->nro_despacho->setDbValueDef($rsnew, $this->nro_despacho->CurrentValue, null, false);

@@ -92,6 +92,9 @@ $Page->showMessage();
 <?php if ($Page->nro_despacho->Visible) { // nro_despacho ?>
         <th class="<?= $Page->nro_despacho->headerCellClass() ?>"><span id="elh_salidas_nro_despacho" class="salidas_nro_despacho"><?= $Page->nro_despacho->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->pago_premio->Visible) { // pago_premio ?>
+        <th class="<?= $Page->pago_premio->headerCellClass() ?>"><span id="elh_salidas_pago_premio" class="salidas_pago_premio"><?= $Page->pago_premio->caption() ?></span></th>
+<?php } ?>
     </tr>
     </thead>
     <tbody>
@@ -238,6 +241,14 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_salidas_nro_despacho" class="salidas_nro_despacho">
 <span<?= $Page->nro_despacho->viewAttributes() ?>>
 <?= $Page->nro_despacho->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->pago_premio->Visible) { // pago_premio ?>
+        <td <?= $Page->pago_premio->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_salidas_pago_premio" class="salidas_pago_premio">
+<span<?= $Page->pago_premio->viewAttributes() ?>>
+<?= $Page->pago_premio->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

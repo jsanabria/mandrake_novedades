@@ -430,7 +430,7 @@ class SalidasDelete extends Salidas
         $this->igtf->Visible = false;
         $this->monto_base_igtf->Visible = false;
         $this->monto_igtf->Visible = false;
-        $this->pago_premio->Visible = false;
+        $this->pago_premio->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -1128,6 +1128,11 @@ class SalidasDelete extends Salidas
             $this->nro_despacho->LinkCustomAttributes = "";
             $this->nro_despacho->HrefValue = "";
             $this->nro_despacho->TooltipValue = "";
+
+            // pago_premio
+            $this->pago_premio->LinkCustomAttributes = "";
+            $this->pago_premio->HrefValue = "";
+            $this->pago_premio->TooltipValue = "";
         }
 
         // Call Row Rendered event

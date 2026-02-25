@@ -669,7 +669,7 @@ class SalidasList extends Salidas
         $this->igtf->Visible = false;
         $this->monto_base_igtf->Visible = false;
         $this->monto_igtf->Visible = false;
-        $this->pago_premio->Visible = false;
+        $this->pago_premio->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -2122,6 +2122,7 @@ class SalidasList extends Salidas
             $this->updateSort($this->asesor); // asesor
             $this->updateSort($this->unidades); // unidades
             $this->updateSort($this->nro_despacho); // nro_despacho
+            $this->updateSort($this->pago_premio); // pago_premio
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -3859,6 +3860,11 @@ class SalidasList extends Salidas
             $this->nro_despacho->LinkCustomAttributes = "";
             $this->nro_despacho->HrefValue = "";
             $this->nro_despacho->TooltipValue = "";
+
+            // pago_premio
+            $this->pago_premio->LinkCustomAttributes = "";
+            $this->pago_premio->HrefValue = "";
+            $this->pago_premio->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
             // tipo_documento
             $this->tipo_documento->EditAttrs["class"] = "form-control";
@@ -4058,6 +4064,12 @@ class SalidasList extends Salidas
             }
             $this->nro_despacho->EditValue = HtmlEncode($this->nro_despacho->AdvancedSearch->SearchValue);
             $this->nro_despacho->PlaceHolder = RemoveHtml($this->nro_despacho->caption());
+
+            // pago_premio
+            $this->pago_premio->EditAttrs["class"] = "form-control";
+            $this->pago_premio->EditCustomAttributes = "";
+            $this->pago_premio->EditValue = $this->pago_premio->options(true);
+            $this->pago_premio->PlaceHolder = RemoveHtml($this->pago_premio->caption());
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();

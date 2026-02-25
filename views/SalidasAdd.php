@@ -29,7 +29,6 @@ loadjs.ready("head", function () {
         ["nota", [fields.nota.visible && fields.nota.required ? ew.Validators.required(fields.nota.caption) : null], fields.nota.isInvalid],
         ["asesor", [fields.asesor.visible && fields.asesor.required ? ew.Validators.required(fields.asesor.caption) : null], fields.asesor.isInvalid],
         ["descuento", [fields.descuento.visible && fields.descuento.required ? ew.Validators.required(fields.descuento.caption) : null, ew.Validators.float], fields.descuento.isInvalid],
-        ["ci_rif", [fields.ci_rif.visible && fields.ci_rif.required ? ew.Validators.required(fields.ci_rif.caption) : null], fields.ci_rif.isInvalid],
         ["nro_despacho", [fields.nro_despacho.visible && fields.nro_despacho.required ? ew.Validators.required(fields.nro_despacho.caption) : null], fields.nro_despacho.isInvalid],
         ["igtf", [fields.igtf.visible && fields.igtf.required ? ew.Validators.required(fields.igtf.caption) : null], fields.igtf.isInvalid]
     ]);
@@ -104,7 +103,6 @@ loadjs.ready("head", function () {
     fsalidasadd.lists.lista_pedido = <?= $Page->lista_pedido->toClientList($Page) ?>;
     fsalidasadd.lists.asesor = <?= $Page->asesor->toClientList($Page) ?>;
     fsalidasadd.lists.descuento = <?= $Page->descuento->toClientList($Page) ?>;
-    fsalidasadd.lists.ci_rif = <?= $Page->ci_rif->toClientList($Page) ?>;
     fsalidasadd.lists.igtf = <?= $Page->igtf->toClientList($Page) ?>;
     loadjs.done("fsalidasadd");
 });
@@ -357,38 +355,6 @@ loadjs.ready(["fsalidasadd"], function() {
 });
 </script>
 <?= $Page->descuento->Lookup->getParamTag($Page, "p_x_descuento") ?>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->ci_rif->Visible) { // ci_rif ?>
-    <div id="r_ci_rif" class="form-group row">
-        <label id="elh_salidas_ci_rif" class="<?= $Page->LeftColumnClass ?>"><?= $Page->ci_rif->caption() ?><?= $Page->ci_rif->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->ci_rif->cellAttributes() ?>>
-<span id="el_salidas_ci_rif">
-<template id="tp_x_ci_rif">
-    <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input" data-table="salidas" data-field="x_ci_rif" name="x_ci_rif" id="x_ci_rif"<?= $Page->ci_rif->editAttributes() ?>>
-        <label class="custom-control-label"></label>
-    </div>
-</template>
-<div id="dsl_x_ci_rif" class="ew-item-list"></div>
-<input type="hidden"
-    is="selection-list"
-    id="x_ci_rif"
-    name="x_ci_rif"
-    value="<?= HtmlEncode($Page->ci_rif->CurrentValue) ?>"
-    data-type="select-one"
-    data-template="tp_x_ci_rif"
-    data-target="dsl_x_ci_rif"
-    data-repeatcolumn="5"
-    class="form-control<?= $Page->ci_rif->isInvalidClass() ?>"
-    data-table="salidas"
-    data-field="x_ci_rif"
-    data-value-separator="<?= $Page->ci_rif->displayValueSeparatorAttribute() ?>"
-    <?= $Page->ci_rif->editAttributes() ?>>
-<?= $Page->ci_rif->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->ci_rif->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

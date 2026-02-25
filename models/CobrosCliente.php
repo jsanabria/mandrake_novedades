@@ -2215,6 +2215,32 @@ SORTHTML;
     		}
     	}
     	/////////
+
+    	/*** Se hace uso del API para registrar las ventas en el servidor ***/
+    	// Obtenemos los datos recién insertados en la tienda local
+        $tienda = ExecuteScalar("SELECT valor2 AS tienda FROM parametro WHERE codigo = '048';"); 
+        $fecha = $rsnew["fecha"];
+    	$sql = "SELECT nro_documento, total, IFNULL(pago_premio, 'N') AS pago_premio FROM salidas WHERE tipo_documento = 'TDCNET' AND id = " . $rsnew["id_documento"] . ";";
+    	$row = ExecuteRow($sql);
+        $nro_doc = trim($tienda) . "-" . trim($row["nro_documento"]);
+        $monto = ($row["pago_premio"] == 'S' ? 0 : $row["total"]);
+        $sql = "SELECT ci_rif, nombre FROM cliente WHERE id = " . $rsnew["cliente"] . ";";
+        $row = ExecuteRow($sql);
+        $ci = $row["ci_rif"];
+        $nombre_cliente = $row["nombre"];
+
+        // Enviamos al API Central
+        $resultado = enviarVentaAlCentral($tienda, $fecha, $nro_doc, $ci, $nombre_cliente, $monto, CurrentUserName());
+        $id = $rsnew["id_documento"];
+        // Opcional: Si quieres registrar el error en el log de PHPMaker si falla
+        if ($resultado["status"] === "success") {
+            // Solo si el API respondió OK, marcamos como Cerrado
+            ExecuteUpdate("UPDATE salidas SET cerrado = 'S' WHERE id = " . $id);
+        } else {
+            // Si falló (por internet o error), se queda en 'N' para el barrido posterior
+            Log("Sincronización pendiente para ID $id: " . $resultado["message"]);
+        }
+    	/////////
     }
 
     // Row Updating event

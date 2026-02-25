@@ -2185,10 +2185,38 @@ class PuntosList extends Puntos
             $this->fecha->EditCustomAttributes = "";
             $this->fecha->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->fecha->AdvancedSearch->SearchValue, 7), 7));
             $this->fecha->PlaceHolder = RemoveHtml($this->fecha->caption());
+            $this->fecha->EditAttrs["class"] = "form-control";
+            $this->fecha->EditCustomAttributes = "";
+            $this->fecha->EditValue2 = HtmlEncode(FormatDateTime(UnFormatDateTime($this->fecha->AdvancedSearch->SearchValue2, 7), 7));
+            $this->fecha->PlaceHolder = RemoveHtml($this->fecha->caption());
 
             // tipo
             $this->tipo->EditAttrs["class"] = "form-control";
             $this->tipo->EditCustomAttributes = "";
+            $curVal = trim(strval($this->tipo->AdvancedSearch->SearchValue));
+            if ($curVal != "") {
+                $this->tipo->AdvancedSearch->ViewValue = $this->tipo->lookupCacheOption($curVal);
+            } else {
+                $this->tipo->AdvancedSearch->ViewValue = $this->tipo->Lookup !== null && is_array($this->tipo->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->tipo->AdvancedSearch->ViewValue !== null) { // Load from cache
+                $this->tipo->EditValue = array_values($this->tipo->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`valor1`" . SearchString("=", $this->tipo->AdvancedSearch->SearchValue, DATATYPE_STRING, "");
+                }
+                $lookupFilter = function() {
+                    return (CurrentPageID() == "add" ? ($_SESSION["FACTURACION"] == "S" ? "`codigo` = '070' AND valor1 = 'PP'" : "`codigo` = '070'") : "`codigo` = '070'");
+                };
+                $lookupFilter = $lookupFilter->bindTo($this);
+                $sqlWrk = $this->tipo->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->tipo->EditValue = $arwrk;
+            }
             $this->tipo->PlaceHolder = RemoveHtml($this->tipo->caption());
 
             // nro_documento
@@ -2264,6 +2292,12 @@ class PuntosList extends Puntos
         }
         if (!CheckInteger($this->cliente->AdvancedSearch->SearchValue)) {
             $this->cliente->addErrorMessage($this->cliente->getErrorMessage(false));
+        }
+        if (!CheckEuroDate($this->fecha->AdvancedSearch->SearchValue)) {
+            $this->fecha->addErrorMessage($this->fecha->getErrorMessage(false));
+        }
+        if (!CheckEuroDate($this->fecha->AdvancedSearch->SearchValue2)) {
+            $this->fecha->addErrorMessage($this->fecha->getErrorMessage(false));
         }
 
         // Return validate result

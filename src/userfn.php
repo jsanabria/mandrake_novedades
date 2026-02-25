@@ -907,5 +907,50 @@ function Aplicar3x2($xid, $xtipo) {
 		} 
 	}
 }
+function enviarVentaAlCentral($tienda, $fecha, $nro_doc, $ci, $nombre_cliente, $monto, $username) {
+	$server = ExecuteScalar("SELECT valor1 AS server FROM parametro WHERE codigo = '080';");
+    $url_api = "$server/api/registrar_venta.php";
+    $token_seguridad = '!NovedadesYPunto.'; 
+    $datos = [
+        "token" => $token_seguridad,
+        "tienda" => $tienda,
+        "fecha" => $fecha,
+        "nro_documento" => $nro_doc,
+        "ci_cliente" => $ci,
+        "nombre_cliente" => $nombre_cliente,
+        "monto" => $monto,
+        "username" => $username
+    ];
+    $ch = curl_init($url_api);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($datos));
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); 
+    $respuesta = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($respuesta, true);
+}
+function ProcesarVentasPendientes() {
+    $tienda = ExecuteScalar("SELECT valor2 AS tienda FROM parametro WHERE codigo = '048';"); 
+    $fecha_limite = date("Y-m-d", strtotime("-1 month")); 
+
+    // Buscar registros no cerrados de tipo TDCNET
+    $sql = "SELECT a.id, a.fecha, CONCAT('$tienda-', a.nro_documento) AS nro_documento,
+    		b.ci_rif AS ci_cliente, b.nombre AS nombre_cliente, a.total AS monto 
+            FROM salidas AS a JOIN cliente AS b ON b.id = a.cliente 
+            WHERE a.tipo_documento = 'TDCNET' 
+            AND a.cerrado = 'N' 
+            AND a.fecha >= '$fecha_limite';";
+    $pendientes = ExecuteRows($sql);
+    if (is_array($pendientes)) {
+        foreach ($pendientes as $row) {
+            $res = enviarVentaAlCentral($tienda, $row["fecha"], $row["nro_documento"], $row["ci_cliente"], $row["nombre_cliente"], $row["monto"], CurrentUserName());
+            if ($res["status"] === "success") {
+                ExecuteUpdate("UPDATE salidas SET cerrado = 'S' WHERE id = " . $row["id"]);
+            }
+        }
+    }
+}
 
 /**** Fin ****/

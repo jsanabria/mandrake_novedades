@@ -185,6 +185,17 @@ $salidas = Container("salidas");
 </td>
         </tr>
 <?php } ?>
+<?php if ($salidas->pago_premio->Visible) { // pago_premio ?>
+        <tr id="r_pago_premio">
+            <td class="<?= $salidas->TableLeftColumnClass ?>"><?= $salidas->pago_premio->caption() ?></td>
+            <td <?= $salidas->pago_premio->cellAttributes() ?>>
+<span id="el_salidas_pago_premio">
+<span<?= $salidas->pago_premio->viewAttributes() ?>>
+<?= $salidas->pago_premio->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
     </tbody>
 </table>
 </div>

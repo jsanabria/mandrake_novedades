@@ -1483,14 +1483,6 @@ class SalidasView extends Salidas
             $this->descuento->CssClass = "font-weight-bold";
             $this->descuento->ViewCustomAttributes = "";
 
-            // ci_rif
-            if (strval($this->ci_rif->CurrentValue) != "") {
-                $this->ci_rif->ViewValue = $this->ci_rif->optionCaption($this->ci_rif->CurrentValue);
-            } else {
-                $this->ci_rif->ViewValue = null;
-            }
-            $this->ci_rif->ViewCustomAttributes = "";
-
             // nro_despacho
             $this->nro_despacho->ViewValue = $this->nro_despacho->CurrentValue;
             $this->nro_despacho->ViewCustomAttributes = "";
@@ -1643,11 +1635,6 @@ class SalidasView extends Salidas
             $this->descuento->LinkCustomAttributes = "";
             $this->descuento->HrefValue = "";
             $this->descuento->TooltipValue = "";
-
-            // ci_rif
-            $this->ci_rif->LinkCustomAttributes = "";
-            $this->ci_rif->HrefValue = "";
-            $this->ci_rif->TooltipValue = "";
 
             // nro_despacho
             $this->nro_despacho->LinkCustomAttributes = "";

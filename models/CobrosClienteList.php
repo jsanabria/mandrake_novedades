@@ -3016,6 +3016,7 @@ class CobrosClienteList extends CobrosCliente
        							Hay Notas de Entrega en estatus NUEVO. Proceselas para poner emitir el cierre de caja...
        						</div>';
        	}
+       	ProcesarVentasPendientes();
     }
 
     // Page Data Rendered event

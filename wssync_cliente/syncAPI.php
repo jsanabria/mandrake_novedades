@@ -107,24 +107,77 @@ if(isset($_GET['user']) && intval($_GET['user']) == 365) {
                 break;
 
             case "tipo_pago":
-                $sql = "SELECT fecha, metodo_pago, SUM(monto_bs) AS monto_bs, SUM(monto_usd) AS monto_usd 
-                        FROM (
-                            SELECT b.fecha, CONCAT(IFNULL(param.valor2, 'OTRO'), ' - ', a.moneda) AS metodo_pago, a.monto_bs, a.monto_usd
-                            FROM cobros_cliente_detalle AS a 
-                            JOIN cobros_cliente AS b ON b.id = a.cobros_cliente 
-                            LEFT OUTER JOIN salidas AS c ON c.id = b.id_documento 
-                            LEFT OUTER JOIN parametro AS param ON param.valor1 = a.metodo_pago AND param.codigo = '009'
-                            WHERE a.metodo_pago NOT IN ('RC', 'RD', 'PF', 'PC', 'DV', 'NC', 'ND', 'SF', 'GN') 
-                            AND b.fecha BETWEEN '$fecha_inicio 00:00:00' AND '$fecha_fin 23:59:59' 
-                            AND c.estatus = 'PROCESADO' AND IFNULL(c.pago_premio, 'N') = 'N'
-                            UNION ALL 
-                            SELECT a.fecha, CONCAT(IFNULL(param.valor2, 'RECIBO'), ' - ', a.moneda), a.monto_bs, a.monto_usd
-                            FROM recarga AS a 
-                            LEFT OUTER JOIN parametro AS param ON param.valor1 = a.metodo_pago AND param.codigo = '009'
-                            WHERE a.metodo_pago NOT IN ('RC', 'RD', 'PF', 'PC', 'DV', 'NC', 'ND', 'SF', 'GN') 
-                            AND a.fecha BETWEEN '$fecha_inicio 00:00:00' AND '$fecha_fin 23:59:59' 
-                            AND (a.monto_usd > 0 OR a.reverso = 'S')
-                        ) AS combined GROUP BY fecha, metodo_pago";
+                $sql = "SELECT 
+                            fecha, metodo_pago, SUM(monto_bs) AS monto_bs, SUM(monto_usd) AS monto_usd 
+                        FROM 
+                            (
+                                SELECT 
+                                    aa.fecha, 
+                                    aa.tipo, 
+                                    CONCAT(bb.valor2, ' - ', aa.moneda) AS metodo_pago, 
+                                    -- aa.doc, 
+                                    aa.cliente, 
+                                    aa.monto_bs AS monto_bs, 
+                                    aa.monto_usd AS monto_usd, 
+                                    aa.metodo_pago AS tipo_pago, aa.referencia  
+                                FROM 
+                                    (
+                                    SELECT 
+                                        b.fecha, 
+                                        'NOTA DE ENTREGA' AS tipo, 
+                                        a.metodo_pago, 
+                                        a.moneda, 
+                                        -- c.nro_documento AS doc, 
+                                        d.nombre AS cliente,  
+                                        a.monto_bs AS monto_bs, a.monto_usd AS monto_usd, a.referencia  
+                                    FROM 
+                                        cobros_cliente_detalle AS a 
+                                        JOIN cobros_cliente AS b ON b.id = a.cobros_cliente 
+                                        LEFT OUTER JOIN salidas AS c ON c.id = b.id_documento 
+                                        LEFT OUTER JOIN cliente AS d ON d.id = b.cliente 
+                                    WHERE 
+                                        a.metodo_pago NOT IN ('RC', 'RD', 'PF', 'PC', 'DV', 'NC', 'ND', 'SF', 'GN') 
+                                        AND b.fecha BETWEEN '$fecha_inicio 00:00:00' AND '$fecha_fin 23:59:59' 
+                                        AND c.estatus = 'PROCESADO' AND IFNULL(c.pago_premio, 'N') = 'N'  
+                                    UNION ALL 
+                                    SELECT 
+                                        a.fecha, 
+                                        'RECIBO' AS TIPO, 
+                                        a.metodo_pago, 
+                                        a.moneda, 
+                                        -- (SELECT LPAD(nro_recibo, 7, '0') FROM abono WHERE id = a.abono) AS doc, 
+                                        b.nombre AS cliente, 
+                                        a.monto_bs AS monto_bs, 
+                                        a.monto_usd AS monto_usd, a.referencia  
+                                    FROM 
+                                        recarga AS a 
+                                        LEFT OUTER JOIN cliente AS b ON b.id = a.cliente 
+                                    WHERE 
+                                        a.metodo_pago NOT IN ('RC', 'RD', 'PF', 'PC', 'DV', 'NC', 'ND', 'SF', 'GN') 
+                                        AND a.fecha BETWEEN '$fecha_inicio 00:00:00' AND '$fecha_fin 23:59:59' 
+                                        AND (a.monto_usd > 0 OR a.reverso = 'S') 
+                                    UNION ALL 
+                                    SELECT 
+                                        a.fecha, 
+                                        'RECIBO' AS TIPO, 
+                                        a.metodo_pago, 
+                                        a.moneda, 
+                                        -- (SELECT LPAD(nro_recibo, 7, '0') FROM abono WHERE id = a.abono) AS doc, 
+                                        b.nombre AS cliente, 
+                                        a.monto_bs AS monto_bs, 
+                                        a.monto_usd AS monto_usd, a.referencia  
+                                    FROM 
+                                        recarga2 AS a 
+                                        LEFT OUTER JOIN cliente AS b ON b.id = a.cliente 
+                                    WHERE 
+                                        a.metodo_pago NOT IN ('RC', 'RD', 'PF', 'PC', 'DV', 'NC', 'ND', 'SF', 'GN') 
+                                        AND a.fecha BETWEEN '$fecha_inicio 00:00:00' AND '$fecha_fin 23:59:59' 
+                                        AND (a.monto_usd > 0 OR a.reverso = 'S') 
+                                    ) AS aa 
+                                    LEFT OUTER JOIN parametro AS bb ON bb.valor1 = aa.metodo_pago 
+                                    WHERE bb.codigo = '009' AND aa.metodo_pago NOT IN ('RC', 'RD', 'PF', 'PC', 'DV', 'NC', 'ND', 'SF', 'GN') 
+                            ) AS mp 
+                        GROUP BY fecha, metodo_pago;";
                 $rs = mysqli_query($link, $sql);
                 $listaTipoPago = [];
                 while($row = mysqli_fetch_assoc($rs)) {

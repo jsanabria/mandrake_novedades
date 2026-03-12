@@ -25,7 +25,8 @@ loadjs.ready("head", function () {
         ["tarifa", [fields.tarifa.visible && fields.tarifa.required ? ew.Validators.required(fields.tarifa.caption) : null], fields.tarifa.isInvalid],
         ["fabricante", [fields.fabricante.visible && fields.fabricante.required ? ew.Validators.required(fields.fabricante.caption) : null], fields.fabricante.isInvalid],
         ["articulo", [fields.articulo.visible && fields.articulo.required ? ew.Validators.required(fields.articulo.caption) : null], fields.articulo.isInvalid],
-        ["precio", [fields.precio.visible && fields.precio.required ? ew.Validators.required(fields.precio.caption) : null, ew.Validators.float], fields.precio.isInvalid]
+        ["precio", [fields.precio.visible && fields.precio.required ? ew.Validators.required(fields.precio.caption) : null, ew.Validators.float], fields.precio.isInvalid],
+        ["precio2", [fields.precio2.visible && fields.precio2.required ? ew.Validators.required(fields.precio2.caption) : null, ew.Validators.float], fields.precio2.isInvalid]
     ]);
 
     // Set invalid fields
@@ -87,6 +88,8 @@ loadjs.ready("head", function () {
             return false;
         if (ew.valueChanged(fobj, rowIndex, "precio", false))
             return false;
+        if (ew.valueChanged(fobj, rowIndex, "precio2", false))
+            return false;
         return true;
     }
 
@@ -144,6 +147,9 @@ $Grid->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Grid->precio->Visible) { // precio ?>
         <th data-name="precio" class="<?= $Grid->precio->headerCellClass() ?>"><div id="elh_tarifa_articulo_precio" class="tarifa_articulo_precio"><?= $Grid->renderSort($Grid->precio) ?></div></th>
+<?php } ?>
+<?php if ($Grid->precio2->Visible) { // precio2 ?>
+        <th data-name="precio2" class="<?= $Grid->precio2->headerCellClass() ?>"><div id="elh_tarifa_articulo_precio2" class="tarifa_articulo_precio2"><?= $Grid->renderSort($Grid->precio2) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -454,6 +460,33 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
+    <?php if ($Grid->precio2->Visible) { // precio2 ?>
+        <td data-name="precio2" <?= $Grid->precio2->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_tarifa_articulo_precio2" class="form-group">
+<input type="<?= $Grid->precio2->getInputTextType() ?>" data-table="tarifa_articulo" data-field="x_precio2" name="x<?= $Grid->RowIndex ?>_precio2" id="x<?= $Grid->RowIndex ?>_precio2" size="30" maxlength="13" placeholder="<?= HtmlEncode($Grid->precio2->getPlaceHolder()) ?>" value="<?= $Grid->precio2->EditValue ?>"<?= $Grid->precio2->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->precio2->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="tarifa_articulo" data-field="x_precio2" data-hidden="1" name="o<?= $Grid->RowIndex ?>_precio2" id="o<?= $Grid->RowIndex ?>_precio2" value="<?= HtmlEncode($Grid->precio2->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_tarifa_articulo_precio2" class="form-group">
+<input type="<?= $Grid->precio2->getInputTextType() ?>" data-table="tarifa_articulo" data-field="x_precio2" name="x<?= $Grid->RowIndex ?>_precio2" id="x<?= $Grid->RowIndex ?>_precio2" size="30" maxlength="13" placeholder="<?= HtmlEncode($Grid->precio2->getPlaceHolder()) ?>" value="<?= $Grid->precio2->EditValue ?>"<?= $Grid->precio2->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->precio2->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_tarifa_articulo_precio2">
+<span<?= $Grid->precio2->viewAttributes() ?>>
+<?= $Grid->precio2->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="tarifa_articulo" data-field="x_precio2" data-hidden="1" name="ftarifa_articulogrid$x<?= $Grid->RowIndex ?>_precio2" id="ftarifa_articulogrid$x<?= $Grid->RowIndex ?>_precio2" value="<?= HtmlEncode($Grid->precio2->FormValue) ?>">
+<input type="hidden" data-table="tarifa_articulo" data-field="x_precio2" data-hidden="1" name="ftarifa_articulogrid$o<?= $Grid->RowIndex ?>_precio2" id="ftarifa_articulogrid$o<?= $Grid->RowIndex ?>_precio2" value="<?= HtmlEncode($Grid->precio2->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
 <?php
 // Render list options (body, right)
 $Grid->ListOptions->render("body", "right", $Grid->RowCount);
@@ -608,6 +641,23 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="tarifa_articulo" data-field="x_precio" data-hidden="1" name="x<?= $Grid->RowIndex ?>_precio" id="x<?= $Grid->RowIndex ?>_precio" value="<?= HtmlEncode($Grid->precio->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="tarifa_articulo" data-field="x_precio" data-hidden="1" name="o<?= $Grid->RowIndex ?>_precio" id="o<?= $Grid->RowIndex ?>_precio" value="<?= HtmlEncode($Grid->precio->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->precio2->Visible) { // precio2 ?>
+        <td data-name="precio2">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_tarifa_articulo_precio2" class="form-group tarifa_articulo_precio2">
+<input type="<?= $Grid->precio2->getInputTextType() ?>" data-table="tarifa_articulo" data-field="x_precio2" name="x<?= $Grid->RowIndex ?>_precio2" id="x<?= $Grid->RowIndex ?>_precio2" size="30" maxlength="13" placeholder="<?= HtmlEncode($Grid->precio2->getPlaceHolder()) ?>" value="<?= $Grid->precio2->EditValue ?>"<?= $Grid->precio2->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->precio2->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_tarifa_articulo_precio2" class="form-group tarifa_articulo_precio2">
+<span<?= $Grid->precio2->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->precio2->getDisplayValue($Grid->precio2->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="tarifa_articulo" data-field="x_precio2" data-hidden="1" name="x<?= $Grid->RowIndex ?>_precio2" id="x<?= $Grid->RowIndex ?>_precio2" value="<?= HtmlEncode($Grid->precio2->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="tarifa_articulo" data-field="x_precio2" data-hidden="1" name="o<?= $Grid->RowIndex ?>_precio2" id="o<?= $Grid->RowIndex ?>_precio2" value="<?= HtmlEncode($Grid->precio2->OldValue) ?>">
 </td>
     <?php } ?>
 <?php

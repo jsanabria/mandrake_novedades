@@ -313,6 +313,7 @@ loadjs.ready("load", function () {
     	var dsc = <?= (isset($_REQUEST["dsc"]) ? intval($_REQUEST["dsc"]) : 0) ?>;
     	var puede = $("#puede").val();
     	// (puede);
+    	var pago_divisa = "<?= $_GET["pago_divisa"] ?? 0 ?>";
     	$("#r_pivote2").html("");
     	if(cliente == "") {
     		//$("#r_pivote2").hide();
@@ -323,7 +324,7 @@ loadjs.ready("load", function () {
     	$.ajax({
     	  url : "include/Cliente_Tipo_Pago.php",
     	  type: "GET",
-    	  data : {cliente: cliente, tipo_pago: tipo_pago, pagos: pagos, moneda: moneda, dsc: dsc, puede: puede},
+    	  data : {cliente: cliente, tipo_pago: tipo_pago, pagos: pagos, moneda: moneda, dsc: dsc, puede: puede, pago_divisa: pago_divisa},
     	  beforeSend: function(){
     	    $("#r_pivote2").html("Por Favor Espere. . .");
     	  }

@@ -632,6 +632,7 @@ class ViewArticulosList extends ViewArticulos
         $this->cantidad_en_mano->setVisibility();
         $this->ultimo_costo->setVisibility();
         $this->precio->setVisibility();
+        $this->precio2->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -975,6 +976,7 @@ class ViewArticulosList extends ViewArticulos
         $this->cantidad_en_mano->FormValue = ""; // Clear form value
         $this->ultimo_costo->FormValue = ""; // Clear form value
         $this->precio->FormValue = ""; // Clear form value
+        $this->precio2->FormValue = ""; // Clear form value
         $this->LastAction = $this->CurrentAction; // Save last action
         $this->CurrentAction = ""; // Clear action
         $_SESSION[SESSION_INLINE_MODE] = ""; // Clear inline mode
@@ -1156,6 +1158,9 @@ class ViewArticulosList extends ViewArticulos
         if ($CurrentForm->hasValue("x_precio") && $CurrentForm->hasValue("o_precio") && $this->precio->CurrentValue != $this->precio->OldValue) {
             return false;
         }
+        if ($CurrentForm->hasValue("x_precio2") && $CurrentForm->hasValue("o_precio2") && $this->precio2->CurrentValue != $this->precio2->OldValue) {
+            return false;
+        }
         return true;
     }
 
@@ -1244,6 +1249,7 @@ class ViewArticulosList extends ViewArticulos
         $this->cantidad_en_mano->clearErrorMessage();
         $this->ultimo_costo->clearErrorMessage();
         $this->precio->clearErrorMessage();
+        $this->precio2->clearErrorMessage();
     }
 
     // Get list of filters
@@ -1262,6 +1268,7 @@ class ViewArticulosList extends ViewArticulos
         $filterList = Concat($filterList, $this->cantidad_en_mano->AdvancedSearch->toJson(), ","); // Field cantidad_en_mano
         $filterList = Concat($filterList, $this->ultimo_costo->AdvancedSearch->toJson(), ","); // Field ultimo_costo
         $filterList = Concat($filterList, $this->precio->AdvancedSearch->toJson(), ","); // Field precio
+        $filterList = Concat($filterList, $this->precio2->AdvancedSearch->toJson(), ","); // Field precio2
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1365,6 +1372,14 @@ class ViewArticulosList extends ViewArticulos
         $this->precio->AdvancedSearch->SearchValue2 = @$filter["y_precio"];
         $this->precio->AdvancedSearch->SearchOperator2 = @$filter["w_precio"];
         $this->precio->AdvancedSearch->save();
+
+        // Field precio2
+        $this->precio2->AdvancedSearch->SearchValue = @$filter["x_precio2"];
+        $this->precio2->AdvancedSearch->SearchOperator = @$filter["z_precio2"];
+        $this->precio2->AdvancedSearch->SearchCondition = @$filter["v_precio2"];
+        $this->precio2->AdvancedSearch->SearchValue2 = @$filter["y_precio2"];
+        $this->precio2->AdvancedSearch->SearchOperator2 = @$filter["w_precio2"];
+        $this->precio2->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1385,6 +1400,7 @@ class ViewArticulosList extends ViewArticulos
         $this->buildSearchSql($where, $this->cantidad_en_mano, $default, false); // cantidad_en_mano
         $this->buildSearchSql($where, $this->ultimo_costo, $default, false); // ultimo_costo
         $this->buildSearchSql($where, $this->precio, $default, false); // precio
+        $this->buildSearchSql($where, $this->precio2, $default, false); // precio2
 
         // Set up search parm
         if (!$default && $where != "" && in_array($this->Command, ["", "reset", "resetall"])) {
@@ -1399,6 +1415,7 @@ class ViewArticulosList extends ViewArticulos
             $this->cantidad_en_mano->AdvancedSearch->save(); // cantidad_en_mano
             $this->ultimo_costo->AdvancedSearch->save(); // ultimo_costo
             $this->precio->AdvancedSearch->save(); // precio
+            $this->precio2->AdvancedSearch->save(); // precio2
         }
         return $where;
     }
@@ -1615,6 +1632,9 @@ class ViewArticulosList extends ViewArticulos
         if ($this->precio->AdvancedSearch->issetSession()) {
             return true;
         }
+        if ($this->precio2->AdvancedSearch->issetSession()) {
+            return true;
+        }
         return false;
     }
 
@@ -1655,6 +1675,7 @@ class ViewArticulosList extends ViewArticulos
                 $this->cantidad_en_mano->AdvancedSearch->unsetSession();
                 $this->ultimo_costo->AdvancedSearch->unsetSession();
                 $this->precio->AdvancedSearch->unsetSession();
+                $this->precio2->AdvancedSearch->unsetSession();
     }
 
     // Restore all search parameters
@@ -1674,6 +1695,7 @@ class ViewArticulosList extends ViewArticulos
                 $this->cantidad_en_mano->AdvancedSearch->load();
                 $this->ultimo_costo->AdvancedSearch->load();
                 $this->precio->AdvancedSearch->load();
+                $this->precio2->AdvancedSearch->load();
     }
 
     // Set up sort parameters
@@ -1690,6 +1712,7 @@ class ViewArticulosList extends ViewArticulos
             $this->updateSort($this->cantidad_en_mano); // cantidad_en_mano
             $this->updateSort($this->ultimo_costo); // ultimo_costo
             $this->updateSort($this->precio); // precio
+            $this->updateSort($this->precio2); // precio2
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1737,6 +1760,7 @@ class ViewArticulosList extends ViewArticulos
                 $this->cantidad_en_mano->setSort("");
                 $this->ultimo_costo->setSort("");
                 $this->precio->setSort("");
+                $this->precio2->setSort("");
             }
 
             // Reset start position
@@ -2109,6 +2133,8 @@ class ViewArticulosList extends ViewArticulos
         $this->ultimo_costo->OldValue = $this->ultimo_costo->CurrentValue;
         $this->precio->CurrentValue = 0.00;
         $this->precio->OldValue = $this->precio->CurrentValue;
+        $this->precio2->CurrentValue = 0.00;
+        $this->precio2->OldValue = $this->precio2->CurrentValue;
     }
 
     // Load basic search values
@@ -2187,6 +2213,14 @@ class ViewArticulosList extends ViewArticulos
         if (!$this->isAddOrEdit() && $this->precio->AdvancedSearch->get()) {
             $hasValue = true;
             if (($this->precio->AdvancedSearch->SearchValue != "" || $this->precio->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // precio2
+        if (!$this->isAddOrEdit() && $this->precio2->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->precio2->AdvancedSearch->SearchValue != "" || $this->precio2->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
@@ -2269,6 +2303,16 @@ class ViewArticulosList extends ViewArticulos
             }
         }
 
+        // Check field name 'precio2' first before field var 'x_precio2'
+        $val = $CurrentForm->hasValue("precio2") ? $CurrentForm->getValue("precio2") : $CurrentForm->getValue("x_precio2");
+        if (!$this->precio2->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->precio2->Visible = false; // Disable update for API request
+            } else {
+                $this->precio2->setFormValue($val);
+            }
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
@@ -2290,6 +2334,7 @@ class ViewArticulosList extends ViewArticulos
         $this->cantidad_en_mano->CurrentValue = $this->cantidad_en_mano->FormValue;
         $this->ultimo_costo->CurrentValue = $this->ultimo_costo->FormValue;
         $this->precio->CurrentValue = $this->precio->FormValue;
+        $this->precio2->CurrentValue = $this->precio2->FormValue;
     }
 
     // Load recordset
@@ -2371,6 +2416,7 @@ class ViewArticulosList extends ViewArticulos
         $this->cantidad_en_mano->setDbValue($row['cantidad_en_mano']);
         $this->ultimo_costo->setDbValue($row['ultimo_costo']);
         $this->precio->setDbValue($row['precio']);
+        $this->precio2->setDbValue($row['precio2']);
     }
 
     // Return a row with default values
@@ -2386,6 +2432,7 @@ class ViewArticulosList extends ViewArticulos
         $row['cantidad_en_mano'] = $this->cantidad_en_mano->CurrentValue;
         $row['ultimo_costo'] = $this->ultimo_costo->CurrentValue;
         $row['precio'] = $this->precio->CurrentValue;
+        $row['precio2'] = $this->precio2->CurrentValue;
         return $row;
     }
 
@@ -2433,6 +2480,11 @@ class ViewArticulosList extends ViewArticulos
             $this->precio->CurrentValue = ConvertToFloatString($this->precio->CurrentValue);
         }
 
+        // Convert decimal values if posted back
+        if ($this->precio2->FormValue == $this->precio2->CurrentValue && is_numeric(ConvertToFloatString($this->precio2->CurrentValue))) {
+            $this->precio2->CurrentValue = ConvertToFloatString($this->precio2->CurrentValue);
+        }
+
         // Call Row_Rendering event
         $this->rowRendering();
 
@@ -2453,6 +2505,8 @@ class ViewArticulosList extends ViewArticulos
         // ultimo_costo
 
         // precio
+
+        // precio2
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -2506,6 +2560,11 @@ class ViewArticulosList extends ViewArticulos
             $this->precio->ViewValue = FormatNumber($this->precio->ViewValue, 2, -2, -2, -2);
             $this->precio->ViewCustomAttributes = "";
 
+            // precio2
+            $this->precio2->ViewValue = $this->precio2->CurrentValue;
+            $this->precio2->ViewValue = FormatNumber($this->precio2->ViewValue, 2, -2, -2, -2);
+            $this->precio2->ViewCustomAttributes = "";
+
             // referencia
             $this->referencia->LinkCustomAttributes = "";
             $this->referencia->HrefValue = "";
@@ -2540,6 +2599,11 @@ class ViewArticulosList extends ViewArticulos
             $this->precio->LinkCustomAttributes = "";
             $this->precio->HrefValue = "";
             $this->precio->TooltipValue = "";
+
+            // precio2
+            $this->precio2->LinkCustomAttributes = "";
+            $this->precio2->HrefValue = "";
+            $this->precio2->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // referencia
             $this->referencia->EditAttrs["class"] = "form-control";
@@ -2628,6 +2692,15 @@ class ViewArticulosList extends ViewArticulos
                 $this->precio->EditValue = FormatNumber($this->precio->EditValue, -2, -2, -2, -2);
             }
 
+            // precio2
+            $this->precio2->EditAttrs["class"] = "form-control";
+            $this->precio2->EditCustomAttributes = "";
+            $this->precio2->EditValue = HtmlEncode($this->precio2->CurrentValue);
+            $this->precio2->PlaceHolder = RemoveHtml($this->precio2->caption());
+            if (strval($this->precio2->EditValue) != "" && is_numeric($this->precio2->EditValue)) {
+                $this->precio2->EditValue = FormatNumber($this->precio2->EditValue, -2, -2, -2, -2);
+            }
+
             // Add refer script
 
             // referencia
@@ -2657,6 +2730,10 @@ class ViewArticulosList extends ViewArticulos
             // precio
             $this->precio->LinkCustomAttributes = "";
             $this->precio->HrefValue = "";
+
+            // precio2
+            $this->precio2->LinkCustomAttributes = "";
+            $this->precio2->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // referencia
             $this->referencia->EditAttrs["class"] = "form-control";
@@ -2724,6 +2801,15 @@ class ViewArticulosList extends ViewArticulos
                 $this->precio->EditValue = FormatNumber($this->precio->EditValue, -2, -2, -2, -2);
             }
 
+            // precio2
+            $this->precio2->EditAttrs["class"] = "form-control";
+            $this->precio2->EditCustomAttributes = "";
+            $this->precio2->EditValue = HtmlEncode($this->precio2->CurrentValue);
+            $this->precio2->PlaceHolder = RemoveHtml($this->precio2->caption());
+            if (strval($this->precio2->EditValue) != "" && is_numeric($this->precio2->EditValue)) {
+                $this->precio2->EditValue = FormatNumber($this->precio2->EditValue, -2, -2, -2, -2);
+            }
+
             // Edit refer script
 
             // referencia
@@ -2758,6 +2844,10 @@ class ViewArticulosList extends ViewArticulos
             // precio
             $this->precio->LinkCustomAttributes = "";
             $this->precio->HrefValue = "";
+
+            // precio2
+            $this->precio2->LinkCustomAttributes = "";
+            $this->precio2->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
             // referencia
             $this->referencia->EditAttrs["class"] = "form-control";
@@ -2836,6 +2926,12 @@ class ViewArticulosList extends ViewArticulos
             $this->precio->EditCustomAttributes = "";
             $this->precio->EditValue = HtmlEncode($this->precio->AdvancedSearch->SearchValue);
             $this->precio->PlaceHolder = RemoveHtml($this->precio->caption());
+
+            // precio2
+            $this->precio2->EditAttrs["class"] = "form-control";
+            $this->precio2->EditCustomAttributes = "";
+            $this->precio2->EditValue = HtmlEncode($this->precio2->AdvancedSearch->SearchValue);
+            $this->precio2->PlaceHolder = RemoveHtml($this->precio2->caption());
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -2916,6 +3012,14 @@ class ViewArticulosList extends ViewArticulos
         }
         if (!CheckNumber($this->precio->FormValue)) {
             $this->precio->addErrorMessage($this->precio->getErrorMessage(false));
+        }
+        if ($this->precio2->Required) {
+            if (!$this->precio2->IsDetailKey && EmptyValue($this->precio2->FormValue)) {
+                $this->precio2->addErrorMessage(str_replace("%s", $this->precio2->caption(), $this->precio2->RequiredErrorMessage));
+            }
+        }
+        if (!CheckNumber($this->precio2->FormValue)) {
+            $this->precio2->addErrorMessage($this->precio2->getErrorMessage(false));
         }
 
         // Return validate result
@@ -3035,6 +3139,9 @@ class ViewArticulosList extends ViewArticulos
             // precio
             $this->precio->setDbValueDef($rsnew, $this->precio->CurrentValue, 0, $this->precio->ReadOnly);
 
+            // precio2
+            $this->precio2->setDbValueDef($rsnew, $this->precio2->CurrentValue, 0, $this->precio2->ReadOnly);
+
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
             if ($updateRow) {
@@ -3102,6 +3209,7 @@ class ViewArticulosList extends ViewArticulos
         $hash = "";
         $hash .= GetFieldHash($row['ultimo_costo']); // ultimo_costo
         $hash .= GetFieldHash($row['precio']); // precio
+        $hash .= GetFieldHash($row['precio2']); // precio2
         return md5($hash);
     }
 
@@ -3137,6 +3245,9 @@ class ViewArticulosList extends ViewArticulos
 
         // precio
         $this->precio->setDbValueDef($rsnew, $this->precio->CurrentValue, 0, strval($this->precio->CurrentValue) == "");
+
+        // precio2
+        $this->precio2->setDbValueDef($rsnew, $this->precio2->CurrentValue, 0, strval($this->precio2->CurrentValue) == "");
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
@@ -3188,6 +3299,7 @@ class ViewArticulosList extends ViewArticulos
         $this->cantidad_en_mano->AdvancedSearch->load();
         $this->ultimo_costo->AdvancedSearch->load();
         $this->precio->AdvancedSearch->load();
+        $this->precio2->AdvancedSearch->load();
     }
 
     // Get export HTML tag

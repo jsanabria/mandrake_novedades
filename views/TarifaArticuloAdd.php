@@ -22,7 +22,8 @@ loadjs.ready("head", function () {
     ftarifa_articuloadd.addFields([
         ["fabricante", [fields.fabricante.visible && fields.fabricante.required ? ew.Validators.required(fields.fabricante.caption) : null], fields.fabricante.isInvalid],
         ["articulo", [fields.articulo.visible && fields.articulo.required ? ew.Validators.required(fields.articulo.caption) : null], fields.articulo.isInvalid],
-        ["precio", [fields.precio.visible && fields.precio.required ? ew.Validators.required(fields.precio.caption) : null, ew.Validators.float], fields.precio.isInvalid]
+        ["precio", [fields.precio.visible && fields.precio.required ? ew.Validators.required(fields.precio.caption) : null, ew.Validators.float], fields.precio.isInvalid],
+        ["precio2", [fields.precio2.visible && fields.precio2.required ? ew.Validators.required(fields.precio2.caption) : null, ew.Validators.float], fields.precio2.isInvalid]
     ]);
 
     // Set invalid fields
@@ -164,6 +165,18 @@ $Page->showMessage();
 <input type="<?= $Page->precio->getInputTextType() ?>" data-table="tarifa_articulo" data-field="x_precio" name="x_precio" id="x_precio" size="10" maxlength="13" placeholder="<?= HtmlEncode($Page->precio->getPlaceHolder()) ?>" value="<?= $Page->precio->EditValue ?>"<?= $Page->precio->editAttributes() ?> aria-describedby="x_precio_help">
 <?= $Page->precio->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->precio->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->precio2->Visible) { // precio2 ?>
+    <div id="r_precio2" class="form-group row">
+        <label id="elh_tarifa_articulo_precio2" for="x_precio2" class="<?= $Page->LeftColumnClass ?>"><?= $Page->precio2->caption() ?><?= $Page->precio2->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->precio2->cellAttributes() ?>>
+<span id="el_tarifa_articulo_precio2">
+<input type="<?= $Page->precio2->getInputTextType() ?>" data-table="tarifa_articulo" data-field="x_precio2" name="x_precio2" id="x_precio2" size="30" maxlength="13" placeholder="<?= HtmlEncode($Page->precio2->getPlaceHolder()) ?>" value="<?= $Page->precio2->EditValue ?>"<?= $Page->precio2->editAttributes() ?> aria-describedby="x_precio2_help">
+<?= $Page->precio2->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->precio2->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

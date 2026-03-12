@@ -755,7 +755,13 @@ class CobrosClienteDelete extends CobrosCliente
                 if ($this->tipo_pago->ViewValue === null) { // Lookup from database
                     $filterWrk = "`valor1`" . SearchString("=", $curVal, DATATYPE_STRING, "");
                     $lookupFilter = function() {
-                        return (isset($_REQUEST["dsc"]) ? ($_REQUEST["dsc"] >= 25 ? "`codigo` = '009' AND valor1 IN ('EF','RD')" : "`codigo` = '009' AND valor1 NOT IN ('PC','PF','DV','NC','ND')") : "`codigo` = '009' AND valor1 NOT IN ('PC','PF','DV','NC','ND')");
+                        return ($_REQUEST["pago_divisa"] == "S") 
+                ? "`codigo` = '009' AND valor1 IN ('EF','RD','ZL')" 
+                : (isset($_REQUEST["dsc"]) 
+                    ? ($_REQUEST["dsc"] >= 25 
+                        ? "`codigo` = '009' AND valor1 IN ('EF','RD')" 
+                        : "`codigo` = '009' AND valor1 NOT IN ('PC','PF','DV','NC','ND')") 
+                    : "`codigo` = '009' AND valor1 NOT IN ('PC','PF','DV','NC','ND')");
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     $sqlWrk = $this->tipo_pago->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -947,7 +953,13 @@ class CobrosClienteDelete extends CobrosCliente
                     break;
                 case "x_tipo_pago":
                     $lookupFilter = function () {
-                        return (isset($_REQUEST["dsc"]) ? ($_REQUEST["dsc"] >= 25 ? "`codigo` = '009' AND valor1 IN ('EF','RD')" : "`codigo` = '009' AND valor1 NOT IN ('PC','PF','DV','NC','ND')") : "`codigo` = '009' AND valor1 NOT IN ('PC','PF','DV','NC','ND')");
+                        return ($_REQUEST["pago_divisa"] == "S") 
+    ? "`codigo` = '009' AND valor1 IN ('EF','RD','ZL')" 
+    : (isset($_REQUEST["dsc"]) 
+        ? ($_REQUEST["dsc"] >= 25 
+            ? "`codigo` = '009' AND valor1 IN ('EF','RD')" 
+            : "`codigo` = '009' AND valor1 NOT IN ('PC','PF','DV','NC','ND')") 
+        : "`codigo` = '009' AND valor1 NOT IN ('PC','PF','DV','NC','ND')");
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;

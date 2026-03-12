@@ -58,6 +58,15 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
+<?php if ($Page->precio2->Visible) { // precio2 ?>
+    <?php if ($Page->SortUrl($Page->precio2) == "") { ?>
+        <th class="<?= $Page->precio2->headerCellClass() ?>"><?= $Page->precio2->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->precio2->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->precio2->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->precio2->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->precio2->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->precio2->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->precio2->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -114,6 +123,13 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->precio->cellAttributes() ?>>
 <span<?= $Page->precio->viewAttributes() ?>>
 <?= $Page->precio->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->precio2->Visible) { // precio2 ?>
+        <!-- precio2 -->
+        <td<?= $Page->precio2->cellAttributes() ?>>
+<span<?= $Page->precio2->viewAttributes() ?>>
+<?= $Page->precio2->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php

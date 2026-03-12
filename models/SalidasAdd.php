@@ -493,6 +493,7 @@ class SalidasAdd extends Salidas
         $this->estatus->Visible = false;
         $this->id_documento_padre->Visible = false;
         $this->asesor->setVisibility();
+        $this->pago_divisa->setVisibility();
         $this->dias_credito->Visible = false;
         $this->entregado->Visible = false;
         $this->fecha_entrega->Visible = false;
@@ -507,7 +508,7 @@ class SalidasAdd extends Salidas
         $this->descuento->setVisibility();
         $this->monto_sin_descuento->Visible = false;
         $this->factura->Visible = false;
-        $this->ci_rif->Visible = false;
+        $this->ci_rif->setVisibility();
         $this->nombre->Visible = false;
         $this->direccion->Visible = false;
         $this->telefono->Visible = false;
@@ -722,6 +723,8 @@ class SalidasAdd extends Salidas
         $this->id_documento_padre->OldValue = $this->id_documento_padre->CurrentValue;
         $this->asesor->CurrentValue = null;
         $this->asesor->OldValue = $this->asesor->CurrentValue;
+        $this->pago_divisa->CurrentValue = null;
+        $this->pago_divisa->OldValue = $this->pago_divisa->CurrentValue;
         $this->dias_credito->CurrentValue = null;
         $this->dias_credito->OldValue = $this->dias_credito->CurrentValue;
         $this->entregado->CurrentValue = "N";
@@ -854,6 +857,16 @@ class SalidasAdd extends Salidas
             }
         }
 
+        // Check field name 'pago_divisa' first before field var 'x_pago_divisa'
+        $val = $CurrentForm->hasValue("pago_divisa") ? $CurrentForm->getValue("pago_divisa") : $CurrentForm->getValue("x_pago_divisa");
+        if (!$this->pago_divisa->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->pago_divisa->Visible = false; // Disable update for API request
+            } else {
+                $this->pago_divisa->setFormValue($val);
+            }
+        }
+
         // Check field name 'descuento' first before field var 'x_descuento'
         $val = $CurrentForm->hasValue("descuento") ? $CurrentForm->getValue("descuento") : $CurrentForm->getValue("x_descuento");
         if (!$this->descuento->IsDetailKey) {
@@ -861,6 +874,16 @@ class SalidasAdd extends Salidas
                 $this->descuento->Visible = false; // Disable update for API request
             } else {
                 $this->descuento->setFormValue($val);
+            }
+        }
+
+        // Check field name 'ci_rif' first before field var 'x_ci_rif'
+        $val = $CurrentForm->hasValue("ci_rif") ? $CurrentForm->getValue("ci_rif") : $CurrentForm->getValue("x_ci_rif");
+        if (!$this->ci_rif->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->ci_rif->Visible = false; // Disable update for API request
+            } else {
+                $this->ci_rif->setFormValue($val);
             }
         }
 
@@ -900,7 +923,9 @@ class SalidasAdd extends Salidas
         $this->lista_pedido->CurrentValue = $this->lista_pedido->FormValue;
         $this->nota->CurrentValue = $this->nota->FormValue;
         $this->asesor->CurrentValue = $this->asesor->FormValue;
+        $this->pago_divisa->CurrentValue = $this->pago_divisa->FormValue;
         $this->descuento->CurrentValue = $this->descuento->FormValue;
+        $this->ci_rif->CurrentValue = $this->ci_rif->FormValue;
         $this->nro_despacho->CurrentValue = $this->nro_despacho->FormValue;
         $this->igtf->CurrentValue = $this->igtf->FormValue;
     }
@@ -973,6 +998,7 @@ class SalidasAdd extends Salidas
         $this->estatus->setDbValue($row['estatus']);
         $this->id_documento_padre->setDbValue($row['id_documento_padre']);
         $this->asesor->setDbValue($row['asesor']);
+        $this->pago_divisa->setDbValue($row['pago_divisa']);
         $this->dias_credito->setDbValue($row['dias_credito']);
         $this->entregado->setDbValue($row['entregado']);
         $this->fecha_entrega->setDbValue($row['fecha_entrega']);
@@ -1029,6 +1055,7 @@ class SalidasAdd extends Salidas
         $row['estatus'] = $this->estatus->CurrentValue;
         $row['id_documento_padre'] = $this->id_documento_padre->CurrentValue;
         $row['asesor'] = $this->asesor->CurrentValue;
+        $row['pago_divisa'] = $this->pago_divisa->CurrentValue;
         $row['dias_credito'] = $this->dias_credito->CurrentValue;
         $row['entregado'] = $this->entregado->CurrentValue;
         $row['fecha_entrega'] = $this->fecha_entrega->CurrentValue;
@@ -1129,6 +1156,8 @@ class SalidasAdd extends Salidas
         // id_documento_padre
 
         // asesor
+
+        // pago_divisa
 
         // dias_credito
 
@@ -1374,6 +1403,14 @@ class SalidasAdd extends Salidas
             }
             $this->asesor->ViewCustomAttributes = "";
 
+            // pago_divisa
+            if (strval($this->pago_divisa->CurrentValue) != "") {
+                $this->pago_divisa->ViewValue = $this->pago_divisa->optionCaption($this->pago_divisa->CurrentValue);
+            } else {
+                $this->pago_divisa->ViewValue = null;
+            }
+            $this->pago_divisa->ViewCustomAttributes = "";
+
             // unidades
             $this->unidades->ViewValue = $this->unidades->CurrentValue;
             $this->unidades->ViewCustomAttributes = "";
@@ -1404,6 +1441,14 @@ class SalidasAdd extends Salidas
             }
             $this->descuento->CssClass = "font-weight-bold";
             $this->descuento->ViewCustomAttributes = "";
+
+            // ci_rif
+            if (strval($this->ci_rif->CurrentValue) != "") {
+                $this->ci_rif->ViewValue = $this->ci_rif->optionCaption($this->ci_rif->CurrentValue);
+            } else {
+                $this->ci_rif->ViewValue = null;
+            }
+            $this->ci_rif->ViewCustomAttributes = "";
 
             // nro_despacho
             $this->nro_despacho->ViewValue = $this->nro_despacho->CurrentValue;
@@ -1475,10 +1520,20 @@ class SalidasAdd extends Salidas
             $this->asesor->HrefValue = "";
             $this->asesor->TooltipValue = "";
 
+            // pago_divisa
+            $this->pago_divisa->LinkCustomAttributes = "";
+            $this->pago_divisa->HrefValue = "";
+            $this->pago_divisa->TooltipValue = "";
+
             // descuento
             $this->descuento->LinkCustomAttributes = "";
             $this->descuento->HrefValue = "";
             $this->descuento->TooltipValue = "";
+
+            // ci_rif
+            $this->ci_rif->LinkCustomAttributes = "";
+            $this->ci_rif->HrefValue = "";
+            $this->ci_rif->TooltipValue = "";
 
             // nro_despacho
             $this->nro_despacho->LinkCustomAttributes = "";
@@ -1635,6 +1690,12 @@ class SalidasAdd extends Salidas
             }
             $this->asesor->PlaceHolder = RemoveHtml($this->asesor->caption());
 
+            // pago_divisa
+            $this->pago_divisa->EditAttrs["class"] = "form-control";
+            $this->pago_divisa->EditCustomAttributes = "";
+            $this->pago_divisa->EditValue = $this->pago_divisa->options(true);
+            $this->pago_divisa->PlaceHolder = RemoveHtml($this->pago_divisa->caption());
+
             // descuento
             $this->descuento->EditAttrs["class"] = "form-control";
             $this->descuento->EditCustomAttributes = "";
@@ -1662,6 +1723,11 @@ class SalidasAdd extends Salidas
                 $this->descuento->EditValue = null;
             }
             $this->descuento->PlaceHolder = RemoveHtml($this->descuento->caption());
+
+            // ci_rif
+            $this->ci_rif->EditCustomAttributes = "";
+            $this->ci_rif->EditValue = $this->ci_rif->options(false);
+            $this->ci_rif->PlaceHolder = RemoveHtml($this->ci_rif->caption());
 
             // nro_despacho
             $this->nro_despacho->EditAttrs["class"] = "form-control";
@@ -1712,9 +1778,17 @@ class SalidasAdd extends Salidas
             $this->asesor->LinkCustomAttributes = "";
             $this->asesor->HrefValue = "";
 
+            // pago_divisa
+            $this->pago_divisa->LinkCustomAttributes = "";
+            $this->pago_divisa->HrefValue = "";
+
             // descuento
             $this->descuento->LinkCustomAttributes = "";
             $this->descuento->HrefValue = "";
+
+            // ci_rif
+            $this->ci_rif->LinkCustomAttributes = "";
+            $this->ci_rif->HrefValue = "";
 
             // nro_despacho
             $this->nro_despacho->LinkCustomAttributes = "";
@@ -1786,6 +1860,11 @@ class SalidasAdd extends Salidas
                 $this->asesor->addErrorMessage(str_replace("%s", $this->asesor->caption(), $this->asesor->RequiredErrorMessage));
             }
         }
+        if ($this->pago_divisa->Required) {
+            if (!$this->pago_divisa->IsDetailKey && EmptyValue($this->pago_divisa->FormValue)) {
+                $this->pago_divisa->addErrorMessage(str_replace("%s", $this->pago_divisa->caption(), $this->pago_divisa->RequiredErrorMessage));
+            }
+        }
         if ($this->descuento->Required) {
             if (!$this->descuento->IsDetailKey && EmptyValue($this->descuento->FormValue)) {
                 $this->descuento->addErrorMessage(str_replace("%s", $this->descuento->caption(), $this->descuento->RequiredErrorMessage));
@@ -1793,6 +1872,11 @@ class SalidasAdd extends Salidas
         }
         if (!CheckNumber($this->descuento->FormValue)) {
             $this->descuento->addErrorMessage($this->descuento->getErrorMessage(false));
+        }
+        if ($this->ci_rif->Required) {
+            if ($this->ci_rif->FormValue == "") {
+                $this->ci_rif->addErrorMessage(str_replace("%s", $this->ci_rif->caption(), $this->ci_rif->RequiredErrorMessage));
+            }
         }
         if ($this->nro_despacho->Required) {
             if (!$this->nro_despacho->IsDetailKey && EmptyValue($this->nro_despacho->FormValue)) {
@@ -1869,8 +1953,14 @@ class SalidasAdd extends Salidas
         // asesor
         $this->asesor->setDbValueDef($rsnew, $this->asesor->CurrentValue, null, false);
 
+        // pago_divisa
+        $this->pago_divisa->setDbValueDef($rsnew, $this->pago_divisa->CurrentValue, null, false);
+
         // descuento
         $this->descuento->setDbValueDef($rsnew, $this->descuento->CurrentValue, null, false);
+
+        // ci_rif
+        $this->ci_rif->setDbValueDef($rsnew, $this->ci_rif->CurrentValue, null, false);
 
         // nro_despacho
         $this->nro_despacho->setDbValueDef($rsnew, $this->nro_despacho->CurrentValue, null, false);
@@ -2066,6 +2156,8 @@ class SalidasAdd extends Salidas
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
+                case "x_pago_divisa":
+                    break;
                 case "x_entregado":
                     break;
                 case "x_pagado":
@@ -2179,6 +2271,7 @@ class SalidasAdd extends Salidas
     	$this->igtf->Visible = FALSE;
     	$this->asesor->Visible = FALSE;
     	$this->ci_rif->Visible = FALSE;
+    	$this->pago_divisa->Visible = FALSE;
        	$tipo = isset($_REQUEST["tipo"]) ? $_REQUEST["tipo"] : $_REQUEST["x_tipo_documento"];
     	switch($tipo) {
     	case "TDCPDV":
@@ -2201,6 +2294,7 @@ class SalidasAdd extends Salidas
     		$this->lista_pedido->Visible = FALSE;
     		$this->asesor->Visible = TRUE;
     		$this->ci_rif->Visible = TRUE;
+    		$this->pago_divisa->Visible = TRUE;
     		break;
     	case "TDCFCV":
     		$this->descuento->Visible = TRUE;

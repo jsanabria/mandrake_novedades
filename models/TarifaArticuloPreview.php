@@ -403,6 +403,7 @@ class TarifaArticuloPreview extends TarifaArticulo
         $this->fabricante->setVisibility();
         $this->articulo->setVisibility();
         $this->precio->setVisibility();
+        $this->precio2->setVisibility();
         $this->codigo_ims->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -497,6 +498,7 @@ class TarifaArticuloPreview extends TarifaArticulo
             $this->fabricante->setSort("");
             $this->articulo->setSort("");
             $this->precio->setSort("");
+            $this->precio2->setSort("");
             $this->codigo_ims->setSort("");
 
             // Save sort to session
@@ -513,6 +515,7 @@ class TarifaArticuloPreview extends TarifaArticulo
             $this->updateSort($this->fabricante); // fabricante
             $this->updateSort($this->articulo); // articulo
             $this->updateSort($this->precio); // precio
+            $this->updateSort($this->precio2); // precio2
         }
     }
 

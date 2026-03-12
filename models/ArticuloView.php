@@ -547,6 +547,7 @@ class ArticuloView extends Articulo
         $this->ultimo_costo->setVisibility();
         $this->descuento->setVisibility();
         $this->precio->setVisibility();
+        $this->precio2->setVisibility();
         $this->alicuota->setVisibility();
         $this->articulo_inventario->setVisibility();
         $this->activo->setVisibility();
@@ -946,6 +947,7 @@ class ArticuloView extends Articulo
         $this->ultimo_costo->setDbValue($row['ultimo_costo']);
         $this->descuento->setDbValue($row['descuento']);
         $this->precio->setDbValue($row['precio']);
+        $this->precio2->setDbValue($row['precio2']);
         $this->alicuota->setDbValue($row['alicuota']);
         $this->articulo_inventario->setDbValue($row['articulo_inventario']);
         $this->activo->setDbValue($row['activo']);
@@ -979,6 +981,7 @@ class ArticuloView extends Articulo
         $row['ultimo_costo'] = null;
         $row['descuento'] = null;
         $row['precio'] = null;
+        $row['precio2'] = null;
         $row['alicuota'] = null;
         $row['articulo_inventario'] = null;
         $row['activo'] = null;
@@ -1041,6 +1044,11 @@ class ArticuloView extends Articulo
             $this->precio->CurrentValue = ConvertToFloatString($this->precio->CurrentValue);
         }
 
+        // Convert decimal values if posted back
+        if ($this->precio2->FormValue == $this->precio2->CurrentValue && is_numeric(ConvertToFloatString($this->precio2->CurrentValue))) {
+            $this->precio2->CurrentValue = ConvertToFloatString($this->precio2->CurrentValue);
+        }
+
         // Call Row_Rendering event
         $this->rowRendering();
 
@@ -1087,6 +1095,8 @@ class ArticuloView extends Articulo
         // descuento
 
         // precio
+
+        // precio2
 
         // alicuota
 
@@ -1297,6 +1307,11 @@ class ArticuloView extends Articulo
             $this->precio->ViewValue = FormatNumber($this->precio->ViewValue, 2, -1, -1, -1);
             $this->precio->ViewCustomAttributes = "";
 
+            // precio2
+            $this->precio2->ViewValue = $this->precio2->CurrentValue;
+            $this->precio2->ViewValue = FormatNumber($this->precio2->ViewValue, 2, -2, -2, -2);
+            $this->precio2->ViewCustomAttributes = "";
+
             // alicuota
             $curVal = trim(strval($this->alicuota->CurrentValue));
             if ($curVal != "") {
@@ -1446,6 +1461,11 @@ class ArticuloView extends Articulo
             $this->precio->LinkCustomAttributes = "";
             $this->precio->HrefValue = "";
             $this->precio->TooltipValue = "";
+
+            // precio2
+            $this->precio2->LinkCustomAttributes = "";
+            $this->precio2->HrefValue = "";
+            $this->precio2->TooltipValue = "";
 
             // alicuota
             $this->alicuota->LinkCustomAttributes = "";

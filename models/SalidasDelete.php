@@ -403,6 +403,7 @@ class SalidasDelete extends Salidas
         $this->estatus->setVisibility();
         $this->id_documento_padre->Visible = false;
         $this->asesor->setVisibility();
+        $this->pago_divisa->Visible = false;
         $this->dias_credito->Visible = false;
         $this->entregado->Visible = false;
         $this->fecha_entrega->Visible = false;
@@ -623,6 +624,7 @@ class SalidasDelete extends Salidas
         $this->estatus->setDbValue($row['estatus']);
         $this->id_documento_padre->setDbValue($row['id_documento_padre']);
         $this->asesor->setDbValue($row['asesor']);
+        $this->pago_divisa->setDbValue($row['pago_divisa']);
         $this->dias_credito->setDbValue($row['dias_credito']);
         $this->entregado->setDbValue($row['entregado']);
         $this->fecha_entrega->setDbValue($row['fecha_entrega']);
@@ -678,6 +680,7 @@ class SalidasDelete extends Salidas
         $row['estatus'] = null;
         $row['id_documento_padre'] = null;
         $row['asesor'] = null;
+        $row['pago_divisa'] = null;
         $row['dias_credito'] = null;
         $row['entregado'] = null;
         $row['fecha_entrega'] = null;
@@ -782,6 +785,8 @@ class SalidasDelete extends Salidas
         // id_documento_padre
 
         // asesor
+
+        // pago_divisa
 
         // dias_credito
 
@@ -1022,6 +1027,14 @@ class SalidasDelete extends Salidas
                 $this->asesor->ViewValue = null;
             }
             $this->asesor->ViewCustomAttributes = "";
+
+            // pago_divisa
+            if (strval($this->pago_divisa->CurrentValue) != "") {
+                $this->pago_divisa->ViewValue = $this->pago_divisa->optionCaption($this->pago_divisa->CurrentValue);
+            } else {
+                $this->pago_divisa->ViewValue = null;
+            }
+            $this->pago_divisa->ViewCustomAttributes = "";
 
             // unidades
             $this->unidades->ViewValue = $this->unidades->CurrentValue;
@@ -1286,6 +1299,8 @@ class SalidasDelete extends Salidas
                         return ($this->PageID == "add" OR $this->PageID == "edit") ? "activo = 'S'" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x_pago_divisa":
                     break;
                 case "x_entregado":
                     break;

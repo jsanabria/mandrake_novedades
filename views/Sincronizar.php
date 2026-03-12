@@ -79,6 +79,7 @@ if($sw) {
 		$codigo_ims = str_replace('"', '\"', $value["codigo_ims"]);
 		$activo = $value["activo"];
 		$precio = floatval($value["precio"]);
+		$precio2 = floatval($value["precio2"] ?? 0.00);
 		$descuento = floatval($value["descuento"]);
 		$puntos_ventas = floatval($value["puntos_ventas"]);
 		$puntos_premio = floatval($value["puntos_premio"]);
@@ -102,6 +103,7 @@ if($sw) {
 						codigo_ims = \"$codigo_ims\", 
 						activo = \"$activo\", 
 						precio = $precio,
+						precio2 = $precio2,
 						descuento = $descuento,
 						puntos_ventas = $puntos_ventas,
 						puntos_premio = $puntos_premio 
@@ -127,6 +129,7 @@ if($sw) {
 						codigo_ims = \"$codigo_ims\", 
 						activo = \"$activo\", 
 						precio = $precio,
+						precio2 = $precio2,
 						descuento = $descuento,
 						puntos_ventas = $puntos_ventas,
 						puntos_premio = $puntos_premio;";
@@ -144,9 +147,9 @@ if($sw) {
 	$rows = ExecuteRows($sql);
 	foreach ($rows as $key => $value) { 
 		$sql = "INSERT INTO tarifa_articulo
-				(id, tarifa, fabricante, articulo, precio)
+				(id, tarifa, fabricante, articulo, precio, precio2)
 			SELECT 
-				NULL, " . $value["id"] . " AS tarifa, a.fabricante, a.id AS articulo, a.precio 
+				NULL, " . $value["id"] . " AS tarifa, a.fabricante, a.id AS articulo, a.precio, a.precio2 
 			FROM 
 				articulo AS a 
 				LEFT OUTER JOIN tarifa_articulo AS b ON b.articulo = a.id

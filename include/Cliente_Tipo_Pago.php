@@ -7,6 +7,7 @@ $cliente = $_REQUEST["cliente"];
 $tipo_pago = $_REQUEST["tipo_pago"];
 $pagos = $_REQUEST["pagos"];
 $moneda = trim($_REQUEST["moneda"]) == "" ? "USD" : $_REQUEST["moneda"];
+$pago_divisa = trim($_REQUEST["pago_divisa"]) == "" ? "N" : $_REQUEST["pago_divisa"];
 $dsc = $_REQUEST["dsc"];
 
 if($tipo_pago == "RD") $puede = $_REQUEST["puede"];
@@ -112,20 +113,27 @@ $tasa_cambio = $row["tasa"];
 					</td>
 					<td class="col-sm-2">
 					  <?php 
-					  	if($tipo_pago == "RC") {
+						if ($pago_divisa == "S") { 
 						  	$sql = "SELECT valor1 FROM parametro WHERE codigo = '006' AND valor2='default';"; 
 							$rs = mysqli_query($link, $sql);
 							$combo = '<select id="moneda" name="moneda" class="form-control">';
-					  	} 
-					  	else {
-					  		if($dsc >= 25)
-						  		$sql = "SELECT valor1 FROM parametro WHERE codigo = '006' AND SUBSTRING(valor1, 1, 3) <> 'Bs.';"; 
-						  	else 
-						  		$sql = "SELECT valor1 FROM parametro WHERE codigo = '006';"; 
-							$rs = mysqli_query($link, $sql);
-							$combo = '<select id="moneda" name="moneda" class="form-control">';
-							$combo .= '<option value=""></option>';
-					  	}
+						} 
+						else {
+							if($tipo_pago == "RC") {
+							  	$sql = "SELECT valor1 FROM parametro WHERE codigo = '006' AND valor2='default';"; 
+								$rs = mysqli_query($link, $sql);
+								$combo = '<select id="moneda" name="moneda" class="form-control">';
+							} 
+							else {
+									if($dsc >= 25)
+							  		$sql = "SELECT valor1 FROM parametro WHERE codigo = '006' AND SUBSTRING(valor1, 1, 3) <> 'Bs.';"; 
+							  	else 
+							  		$sql = "SELECT valor1 FROM parametro WHERE codigo = '006';"; 
+								$rs = mysqli_query($link, $sql);
+								$combo = '<select id="moneda" name="moneda" class="form-control">';
+								$combo .= '<option value=""></option>';
+							}
+						}
 						while($row = mysqli_fetch_array($rs)) {
 							$combo .= '<option value="' . $row["valor1"] . '" ' . ($moneda==$row["valor1"] ? 'selected="selected"' : '') . '>' . $row["valor1"] . '</option>';
 						}

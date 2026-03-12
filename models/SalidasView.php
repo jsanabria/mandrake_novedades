@@ -547,6 +547,7 @@ class SalidasView extends Salidas
         $this->estatus->setVisibility();
         $this->id_documento_padre->setVisibility();
         $this->asesor->setVisibility();
+        $this->pago_divisa->setVisibility();
         $this->dias_credito->setVisibility();
         $this->entregado->setVisibility();
         $this->fecha_entrega->setVisibility();
@@ -994,6 +995,7 @@ class SalidasView extends Salidas
         $this->estatus->setDbValue($row['estatus']);
         $this->id_documento_padre->setDbValue($row['id_documento_padre']);
         $this->asesor->setDbValue($row['asesor']);
+        $this->pago_divisa->setDbValue($row['pago_divisa']);
         $this->dias_credito->setDbValue($row['dias_credito']);
         $this->entregado->setDbValue($row['entregado']);
         $this->fecha_entrega->setDbValue($row['fecha_entrega']);
@@ -1049,6 +1051,7 @@ class SalidasView extends Salidas
         $row['estatus'] = null;
         $row['id_documento_padre'] = null;
         $row['asesor'] = null;
+        $row['pago_divisa'] = null;
         $row['dias_credito'] = null;
         $row['entregado'] = null;
         $row['fecha_entrega'] = null;
@@ -1179,6 +1182,8 @@ class SalidasView extends Salidas
         // id_documento_padre
 
         // asesor
+
+        // pago_divisa
 
         // dias_credito
 
@@ -1424,6 +1429,14 @@ class SalidasView extends Salidas
                 $this->asesor->ViewValue = null;
             }
             $this->asesor->ViewCustomAttributes = "";
+
+            // pago_divisa
+            if (strval($this->pago_divisa->CurrentValue) != "") {
+                $this->pago_divisa->ViewValue = $this->pago_divisa->optionCaption($this->pago_divisa->CurrentValue);
+            } else {
+                $this->pago_divisa->ViewValue = null;
+            }
+            $this->pago_divisa->ViewCustomAttributes = "";
 
             // dias_credito
             $this->dias_credito->ViewValue = $this->dias_credito->CurrentValue;
@@ -1774,6 +1787,8 @@ class SalidasView extends Salidas
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
+                case "x_pago_divisa":
+                    break;
                 case "x_entregado":
                     break;
                 case "x_pagado":
@@ -2057,6 +2072,7 @@ class SalidasView extends Salidas
     	}
     	$cliente = intval($this->cliente->CurrentValue);
     	if($this->tipo_documento->CurrentValue == "TDCNET" and $this->estatus->CurrentValue != "ANULADO") {
+    		$pago_divisa = $this->pago_divisa->CurrentValue;
     	   	$url = "../SalidasEdit?showdetail=entradas_salidas&id=" . $this->id->CurrentValue . "&tipo=" . $this->tipo_documento->CurrentValue . "";
     		$header .= '<a class="btn btn-primary" href="' . $url . '" >Editar Nota de Entrega</a>
     				&nbsp&nbsp';
@@ -2077,7 +2093,7 @@ class SalidasView extends Salidas
     		else {
     			$dsc = intval($this->descuento->CurrentValue);
     			$cashea = $this->ci_rif->CurrentValue;
-    			$url = "../CobrosClienteAdd?showdetail=&id_compra=" . $this->id->CurrentValue . "&dsc=$dsc&" . "cashea=$cashea";
+    			$url = "../CobrosClienteAdd?showdetail=&id_compra=" . $this->id->CurrentValue . "&dsc=$dsc&" . "cashea=$cashea&pago_divisa=$pago_divisa";
     			$header .= '<a class="btn btn-primary" href="' . $url . '">Registrar Pago</a>&nbsp&nbsp';
     		}
     		$sql = "SELECT c.id

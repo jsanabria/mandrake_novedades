@@ -493,6 +493,7 @@ class ArticuloAdd extends Articulo
         $this->ultimo_costo->Visible = false;
         $this->descuento->Visible = false;
         $this->precio->Visible = false;
+        $this->precio2->Visible = false;
         $this->alicuota->setVisibility();
         $this->articulo_inventario->setVisibility();
         $this->activo->setVisibility();
@@ -702,6 +703,7 @@ class ArticuloAdd extends Articulo
         $this->ultimo_costo->CurrentValue = 0.00;
         $this->descuento->CurrentValue = 0.00;
         $this->precio->CurrentValue = 0.00;
+        $this->precio2->CurrentValue = 0.00;
         $this->alicuota->CurrentValue = "0";
         $this->articulo_inventario->CurrentValue = "S";
         $this->activo->CurrentValue = null;
@@ -962,6 +964,7 @@ class ArticuloAdd extends Articulo
         $this->ultimo_costo->setDbValue($row['ultimo_costo']);
         $this->descuento->setDbValue($row['descuento']);
         $this->precio->setDbValue($row['precio']);
+        $this->precio2->setDbValue($row['precio2']);
         $this->alicuota->setDbValue($row['alicuota']);
         $this->articulo_inventario->setDbValue($row['articulo_inventario']);
         $this->activo->setDbValue($row['activo']);
@@ -996,6 +999,7 @@ class ArticuloAdd extends Articulo
         $row['ultimo_costo'] = $this->ultimo_costo->CurrentValue;
         $row['descuento'] = $this->descuento->CurrentValue;
         $row['precio'] = $this->precio->CurrentValue;
+        $row['precio2'] = $this->precio2->CurrentValue;
         $row['alicuota'] = $this->alicuota->CurrentValue;
         $row['articulo_inventario'] = $this->articulo_inventario->CurrentValue;
         $row['activo'] = $this->activo->CurrentValue;
@@ -1084,6 +1088,8 @@ class ArticuloAdd extends Articulo
         // descuento
 
         // precio
+
+        // precio2
 
         // alicuota
 
@@ -1293,6 +1299,11 @@ class ArticuloAdd extends Articulo
             $this->precio->ViewValue = $this->precio->CurrentValue;
             $this->precio->ViewValue = FormatNumber($this->precio->ViewValue, 2, -1, -1, -1);
             $this->precio->ViewCustomAttributes = "";
+
+            // precio2
+            $this->precio2->ViewValue = $this->precio2->CurrentValue;
+            $this->precio2->ViewValue = FormatNumber($this->precio2->ViewValue, 2, -2, -2, -2);
+            $this->precio2->ViewCustomAttributes = "";
 
             // alicuota
             $curVal = trim(strval($this->alicuota->CurrentValue));

@@ -28,7 +28,8 @@ loadjs.ready("head", function () {
         ["nombre", [fields.nombre.visible && fields.nombre.required ? ew.Validators.required(fields.nombre.caption) : null], fields.nombre.isInvalid],
         ["cantidad_en_mano", [fields.cantidad_en_mano.visible && fields.cantidad_en_mano.required ? ew.Validators.required(fields.cantidad_en_mano.caption) : null], fields.cantidad_en_mano.isInvalid],
         ["ultimo_costo", [fields.ultimo_costo.visible && fields.ultimo_costo.required ? ew.Validators.required(fields.ultimo_costo.caption) : null, ew.Validators.float], fields.ultimo_costo.isInvalid],
-        ["precio", [fields.precio.visible && fields.precio.required ? ew.Validators.required(fields.precio.caption) : null, ew.Validators.float], fields.precio.isInvalid]
+        ["precio", [fields.precio.visible && fields.precio.required ? ew.Validators.required(fields.precio.caption) : null, ew.Validators.float], fields.precio.isInvalid],
+        ["precio2", [fields.precio2.visible && fields.precio2.required ? ew.Validators.required(fields.precio2.caption) : null, ew.Validators.float], fields.precio2.isInvalid]
     ]);
 
     // Set invalid fields
@@ -104,7 +105,8 @@ loadjs.ready("head", function () {
         ["nombre", [], fields.nombre.isInvalid],
         ["cantidad_en_mano", [], fields.cantidad_en_mano.isInvalid],
         ["ultimo_costo", [], fields.ultimo_costo.isInvalid],
-        ["precio", [], fields.precio.isInvalid]
+        ["precio", [], fields.precio.isInvalid],
+        ["precio2", [], fields.precio2.isInvalid]
     ]);
 
     // Set invalid fields
@@ -332,6 +334,9 @@ $Page->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Page->precio->Visible) { // precio ?>
         <th data-name="precio" class="<?= $Page->precio->headerCellClass() ?>"><div id="elh_view_articulos_precio" class="view_articulos_precio"><?= $Page->renderSort($Page->precio) ?></div></th>
+<?php } ?>
+<?php if ($Page->precio2->Visible) { // precio2 ?>
+        <th data-name="precio2" class="<?= $Page->precio2->headerCellClass() ?>"><div id="elh_view_articulos_precio2" class="view_articulos_precio2"><?= $Page->renderSort($Page->precio2) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -614,6 +619,29 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <?php } ?>
 </td>
     <?php } ?>
+    <?php if ($Page->precio2->Visible) { // precio2 ?>
+        <td data-name="precio2" <?= $Page->precio2->cellAttributes() ?>>
+<?php if ($Page->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Page->RowCount ?>_view_articulos_precio2" class="form-group">
+<input type="<?= $Page->precio2->getInputTextType() ?>" data-table="view_articulos" data-field="x_precio2" name="x<?= $Page->RowIndex ?>_precio2" id="x<?= $Page->RowIndex ?>_precio2" size="10" maxlength="14" placeholder="<?= HtmlEncode($Page->precio2->getPlaceHolder()) ?>" value="<?= $Page->precio2->EditValue ?>"<?= $Page->precio2->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->precio2->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="view_articulos" data-field="x_precio2" data-hidden="1" name="o<?= $Page->RowIndex ?>_precio2" id="o<?= $Page->RowIndex ?>_precio2" value="<?= HtmlEncode($Page->precio2->OldValue) ?>">
+<?php } ?>
+<?php if ($Page->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Page->RowCount ?>_view_articulos_precio2" class="form-group">
+<input type="<?= $Page->precio2->getInputTextType() ?>" data-table="view_articulos" data-field="x_precio2" name="x<?= $Page->RowIndex ?>_precio2" id="x<?= $Page->RowIndex ?>_precio2" size="10" maxlength="14" placeholder="<?= HtmlEncode($Page->precio2->getPlaceHolder()) ?>" value="<?= $Page->precio2->EditValue ?>"<?= $Page->precio2->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->precio2->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Page->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Page->RowCount ?>_view_articulos_precio2">
+<span<?= $Page->precio2->viewAttributes() ?>>
+<?= $Page->precio2->getViewValue() ?></span>
+</span>
+<?php } ?>
+</td>
+    <?php } ?>
 <?php
 // Render list options (body, right)
 $Page->ListOptions->render("body", "right", $Page->RowCount);
@@ -726,6 +754,15 @@ $Page->ListOptions->render("body", "left", $Page->RowIndex);
 <div class="invalid-feedback"><?= $Page->precio->getErrorMessage() ?></div>
 </span>
 <input type="hidden" data-table="view_articulos" data-field="x_precio" data-hidden="1" name="o<?= $Page->RowIndex ?>_precio" id="o<?= $Page->RowIndex ?>_precio" value="<?= HtmlEncode($Page->precio->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Page->precio2->Visible) { // precio2 ?>
+        <td data-name="precio2">
+<span id="el$rowindex$_view_articulos_precio2" class="form-group view_articulos_precio2">
+<input type="<?= $Page->precio2->getInputTextType() ?>" data-table="view_articulos" data-field="x_precio2" name="x<?= $Page->RowIndex ?>_precio2" id="x<?= $Page->RowIndex ?>_precio2" size="10" maxlength="14" placeholder="<?= HtmlEncode($Page->precio2->getPlaceHolder()) ?>" value="<?= $Page->precio2->EditValue ?>"<?= $Page->precio2->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->precio2->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="view_articulos" data-field="x_precio2" data-hidden="1" name="o<?= $Page->RowIndex ?>_precio2" id="o<?= $Page->RowIndex ?>_precio2" value="<?= HtmlEncode($Page->precio2->OldValue) ?>">
 </td>
     <?php } ?>
 <?php

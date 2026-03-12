@@ -629,6 +629,7 @@ class TarifaArticuloList extends TarifaArticulo
         $this->fabricante->setVisibility();
         $this->articulo->setVisibility();
         $this->precio->setVisibility();
+        $this->precio2->setVisibility();
         $this->codigo_ims->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -1000,6 +1001,7 @@ class TarifaArticuloList extends TarifaArticulo
     protected function clearInlineMode()
     {
         $this->precio->FormValue = ""; // Clear form value
+        $this->precio2->FormValue = ""; // Clear form value
         $this->LastAction = $this->CurrentAction; // Save last action
         $this->CurrentAction = ""; // Clear action
         $_SESSION[SESSION_INLINE_MODE] = ""; // Clear inline mode
@@ -1287,6 +1289,9 @@ class TarifaArticuloList extends TarifaArticulo
         if ($CurrentForm->hasValue("x_precio") && $CurrentForm->hasValue("o_precio") && $this->precio->CurrentValue != $this->precio->OldValue) {
             return false;
         }
+        if ($CurrentForm->hasValue("x_precio2") && $CurrentForm->hasValue("o_precio2") && $this->precio2->CurrentValue != $this->precio2->OldValue) {
+            return false;
+        }
         return true;
     }
 
@@ -1372,6 +1377,7 @@ class TarifaArticuloList extends TarifaArticulo
         $this->fabricante->clearErrorMessage();
         $this->articulo->clearErrorMessage();
         $this->precio->clearErrorMessage();
+        $this->precio2->clearErrorMessage();
     }
 
     // Get list of filters
@@ -1387,6 +1393,7 @@ class TarifaArticuloList extends TarifaArticulo
         $filterList = Concat($filterList, $this->fabricante->AdvancedSearch->toJson(), ","); // Field fabricante
         $filterList = Concat($filterList, $this->articulo->AdvancedSearch->toJson(), ","); // Field articulo
         $filterList = Concat($filterList, $this->precio->AdvancedSearch->toJson(), ","); // Field precio
+        $filterList = Concat($filterList, $this->precio2->AdvancedSearch->toJson(), ","); // Field precio2
         $filterList = Concat($filterList, $this->codigo_ims->AdvancedSearch->toJson(), ","); // Field codigo_ims
 
         // Return filter list in JSON
@@ -1464,6 +1471,14 @@ class TarifaArticuloList extends TarifaArticulo
         $this->precio->AdvancedSearch->SearchOperator2 = @$filter["w_precio"];
         $this->precio->AdvancedSearch->save();
 
+        // Field precio2
+        $this->precio2->AdvancedSearch->SearchValue = @$filter["x_precio2"];
+        $this->precio2->AdvancedSearch->SearchOperator = @$filter["z_precio2"];
+        $this->precio2->AdvancedSearch->SearchCondition = @$filter["v_precio2"];
+        $this->precio2->AdvancedSearch->SearchValue2 = @$filter["y_precio2"];
+        $this->precio2->AdvancedSearch->SearchOperator2 = @$filter["w_precio2"];
+        $this->precio2->AdvancedSearch->save();
+
         // Field codigo_ims
         $this->codigo_ims->AdvancedSearch->SearchValue = @$filter["x_codigo_ims"];
         $this->codigo_ims->AdvancedSearch->SearchOperator = @$filter["z_codigo_ims"];
@@ -1486,6 +1501,7 @@ class TarifaArticuloList extends TarifaArticulo
         $this->buildSearchSql($where, $this->fabricante, $default, false); // fabricante
         $this->buildSearchSql($where, $this->articulo, $default, false); // articulo
         $this->buildSearchSql($where, $this->precio, $default, false); // precio
+        $this->buildSearchSql($where, $this->precio2, $default, false); // precio2
         $this->buildSearchSql($where, $this->codigo_ims, $default, false); // codigo_ims
 
         // Set up search parm
@@ -1498,6 +1514,7 @@ class TarifaArticuloList extends TarifaArticulo
             $this->fabricante->AdvancedSearch->save(); // fabricante
             $this->articulo->AdvancedSearch->save(); // articulo
             $this->precio->AdvancedSearch->save(); // precio
+            $this->precio2->AdvancedSearch->save(); // precio2
             $this->codigo_ims->AdvancedSearch->save(); // codigo_ims
         }
         return $where;
@@ -1582,6 +1599,9 @@ class TarifaArticuloList extends TarifaArticulo
         if ($this->precio->AdvancedSearch->issetSession()) {
             return true;
         }
+        if ($this->precio2->AdvancedSearch->issetSession()) {
+            return true;
+        }
         if ($this->codigo_ims->AdvancedSearch->issetSession()) {
             return true;
         }
@@ -1613,6 +1633,7 @@ class TarifaArticuloList extends TarifaArticulo
                 $this->fabricante->AdvancedSearch->unsetSession();
                 $this->articulo->AdvancedSearch->unsetSession();
                 $this->precio->AdvancedSearch->unsetSession();
+                $this->precio2->AdvancedSearch->unsetSession();
                 $this->codigo_ims->AdvancedSearch->unsetSession();
     }
 
@@ -1627,6 +1648,7 @@ class TarifaArticuloList extends TarifaArticulo
                 $this->fabricante->AdvancedSearch->load();
                 $this->articulo->AdvancedSearch->load();
                 $this->precio->AdvancedSearch->load();
+                $this->precio2->AdvancedSearch->load();
                 $this->codigo_ims->AdvancedSearch->load();
     }
 
@@ -1641,6 +1663,7 @@ class TarifaArticuloList extends TarifaArticulo
             $this->updateSort($this->fabricante); // fabricante
             $this->updateSort($this->articulo); // articulo
             $this->updateSort($this->precio); // precio
+            $this->updateSort($this->precio2); // precio2
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1701,6 +1724,7 @@ class TarifaArticuloList extends TarifaArticulo
                 $this->fabricante->setSort("");
                 $this->articulo->setSort("");
                 $this->precio->setSort("");
+                $this->precio2->setSort("");
                 $this->codigo_ims->setSort("");
             }
 
@@ -2119,6 +2143,8 @@ class TarifaArticuloList extends TarifaArticulo
         $this->articulo->OldValue = $this->articulo->CurrentValue;
         $this->precio->CurrentValue = null;
         $this->precio->OldValue = $this->precio->CurrentValue;
+        $this->precio2->CurrentValue = null;
+        $this->precio2->OldValue = $this->precio2->CurrentValue;
         $this->codigo_ims->CurrentValue = null;
         $this->codigo_ims->OldValue = $this->codigo_ims->CurrentValue;
     }
@@ -2165,6 +2191,14 @@ class TarifaArticuloList extends TarifaArticulo
         if (!$this->isAddOrEdit() && $this->precio->AdvancedSearch->get()) {
             $hasValue = true;
             if (($this->precio->AdvancedSearch->SearchValue != "" || $this->precio->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
+        // precio2
+        if (!$this->isAddOrEdit() && $this->precio2->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->precio2->AdvancedSearch->SearchValue != "" || $this->precio2->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
@@ -2237,6 +2271,19 @@ class TarifaArticuloList extends TarifaArticulo
             $this->precio->setOldValue($CurrentForm->getValue("o_precio"));
         }
 
+        // Check field name 'precio2' first before field var 'x_precio2'
+        $val = $CurrentForm->hasValue("precio2") ? $CurrentForm->getValue("precio2") : $CurrentForm->getValue("x_precio2");
+        if (!$this->precio2->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->precio2->Visible = false; // Disable update for API request
+            } else {
+                $this->precio2->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_precio2")) {
+            $this->precio2->setOldValue($CurrentForm->getValue("o_precio2"));
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
@@ -2255,6 +2302,7 @@ class TarifaArticuloList extends TarifaArticulo
         $this->fabricante->CurrentValue = $this->fabricante->FormValue;
         $this->articulo->CurrentValue = $this->articulo->FormValue;
         $this->precio->CurrentValue = $this->precio->FormValue;
+        $this->precio2->CurrentValue = $this->precio2->FormValue;
     }
 
     // Load recordset
@@ -2333,6 +2381,7 @@ class TarifaArticuloList extends TarifaArticulo
         $this->fabricante->setDbValue($row['fabricante']);
         $this->articulo->setDbValue($row['articulo']);
         $this->precio->setDbValue($row['precio']);
+        $this->precio2->setDbValue($row['precio2']);
         $this->codigo_ims->setDbValue($row['codigo_ims']);
     }
 
@@ -2346,6 +2395,7 @@ class TarifaArticuloList extends TarifaArticulo
         $row['fabricante'] = $this->fabricante->CurrentValue;
         $row['articulo'] = $this->articulo->CurrentValue;
         $row['precio'] = $this->precio->CurrentValue;
+        $row['precio2'] = $this->precio2->CurrentValue;
         $row['codigo_ims'] = $this->codigo_ims->CurrentValue;
         return $row;
     }
@@ -2384,6 +2434,11 @@ class TarifaArticuloList extends TarifaArticulo
             $this->precio->CurrentValue = ConvertToFloatString($this->precio->CurrentValue);
         }
 
+        // Convert decimal values if posted back
+        if ($this->precio2->FormValue == $this->precio2->CurrentValue && is_numeric(ConvertToFloatString($this->precio2->CurrentValue))) {
+            $this->precio2->CurrentValue = ConvertToFloatString($this->precio2->CurrentValue);
+        }
+
         // Call Row_Rendering event
         $this->rowRendering();
 
@@ -2398,6 +2453,8 @@ class TarifaArticuloList extends TarifaArticulo
         // articulo
 
         // precio
+
+        // precio2
 
         // codigo_ims
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -2481,6 +2538,11 @@ class TarifaArticuloList extends TarifaArticulo
             $this->precio->ViewValue = FormatNumber($this->precio->ViewValue, 2, -1, -1, -1);
             $this->precio->ViewCustomAttributes = "";
 
+            // precio2
+            $this->precio2->ViewValue = $this->precio2->CurrentValue;
+            $this->precio2->ViewValue = FormatNumber($this->precio2->ViewValue, 2, -2, -2, -2);
+            $this->precio2->ViewCustomAttributes = "";
+
             // codigo_ims
             $this->codigo_ims->ViewValue = $this->codigo_ims->CurrentValue;
             $this->codigo_ims->ViewCustomAttributes = "";
@@ -2504,6 +2566,11 @@ class TarifaArticuloList extends TarifaArticulo
             $this->precio->LinkCustomAttributes = "";
             $this->precio->HrefValue = "";
             $this->precio->TooltipValue = "";
+
+            // precio2
+            $this->precio2->LinkCustomAttributes = "";
+            $this->precio2->HrefValue = "";
+            $this->precio2->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // tarifa
             $this->tarifa->EditAttrs["class"] = "form-control";
@@ -2642,6 +2709,16 @@ class TarifaArticuloList extends TarifaArticulo
                 $this->precio->OldValue = $this->precio->EditValue;
             }
 
+            // precio2
+            $this->precio2->EditAttrs["class"] = "form-control";
+            $this->precio2->EditCustomAttributes = "";
+            $this->precio2->EditValue = HtmlEncode($this->precio2->CurrentValue);
+            $this->precio2->PlaceHolder = RemoveHtml($this->precio2->caption());
+            if (strval($this->precio2->EditValue) != "" && is_numeric($this->precio2->EditValue)) {
+                $this->precio2->EditValue = FormatNumber($this->precio2->EditValue, -2, -2, -2, -2);
+                $this->precio2->OldValue = $this->precio2->EditValue;
+            }
+
             // Add refer script
 
             // tarifa
@@ -2659,6 +2736,10 @@ class TarifaArticuloList extends TarifaArticulo
             // precio
             $this->precio->LinkCustomAttributes = "";
             $this->precio->HrefValue = "";
+
+            // precio2
+            $this->precio2->LinkCustomAttributes = "";
+            $this->precio2->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // tarifa
             $this->tarifa->EditAttrs["class"] = "form-control";
@@ -2797,6 +2878,16 @@ class TarifaArticuloList extends TarifaArticulo
                 $this->precio->OldValue = $this->precio->EditValue;
             }
 
+            // precio2
+            $this->precio2->EditAttrs["class"] = "form-control";
+            $this->precio2->EditCustomAttributes = "";
+            $this->precio2->EditValue = HtmlEncode($this->precio2->CurrentValue);
+            $this->precio2->PlaceHolder = RemoveHtml($this->precio2->caption());
+            if (strval($this->precio2->EditValue) != "" && is_numeric($this->precio2->EditValue)) {
+                $this->precio2->EditValue = FormatNumber($this->precio2->EditValue, -2, -2, -2, -2);
+                $this->precio2->OldValue = $this->precio2->EditValue;
+            }
+
             // Edit refer script
 
             // tarifa
@@ -2814,6 +2905,10 @@ class TarifaArticuloList extends TarifaArticulo
             // precio
             $this->precio->LinkCustomAttributes = "";
             $this->precio->HrefValue = "";
+
+            // precio2
+            $this->precio2->LinkCustomAttributes = "";
+            $this->precio2->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
             // tarifa
             $this->tarifa->EditAttrs["class"] = "form-control";
@@ -2919,6 +3014,12 @@ class TarifaArticuloList extends TarifaArticulo
             $this->precio->EditCustomAttributes = "";
             $this->precio->EditValue = HtmlEncode($this->precio->AdvancedSearch->SearchValue);
             $this->precio->PlaceHolder = RemoveHtml($this->precio->caption());
+
+            // precio2
+            $this->precio2->EditAttrs["class"] = "form-control";
+            $this->precio2->EditCustomAttributes = "";
+            $this->precio2->EditValue = HtmlEncode($this->precio2->AdvancedSearch->SearchValue);
+            $this->precio2->PlaceHolder = RemoveHtml($this->precio2->caption());
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -2981,6 +3082,14 @@ class TarifaArticuloList extends TarifaArticulo
         }
         if (!CheckNumber($this->precio->FormValue)) {
             $this->precio->addErrorMessage($this->precio->getErrorMessage(false));
+        }
+        if ($this->precio2->Required) {
+            if (!$this->precio2->IsDetailKey && EmptyValue($this->precio2->FormValue)) {
+                $this->precio2->addErrorMessage(str_replace("%s", $this->precio2->caption(), $this->precio2->RequiredErrorMessage));
+            }
+        }
+        if (!CheckNumber($this->precio2->FormValue)) {
+            $this->precio2->addErrorMessage($this->precio2->getErrorMessage(false));
         }
 
         // Return validate result
@@ -3109,6 +3218,9 @@ class TarifaArticuloList extends TarifaArticulo
             // precio
             $this->precio->setDbValueDef($rsnew, $this->precio->CurrentValue, null, $this->precio->ReadOnly);
 
+            // precio2
+            $this->precio2->setDbValueDef($rsnew, $this->precio2->CurrentValue, null, $this->precio2->ReadOnly);
+
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
             if ($updateRow) {
@@ -3178,6 +3290,7 @@ class TarifaArticuloList extends TarifaArticulo
         $hash .= GetFieldHash($row['fabricante']); // fabricante
         $hash .= GetFieldHash($row['articulo']); // articulo
         $hash .= GetFieldHash($row['precio']); // precio
+        $hash .= GetFieldHash($row['precio2']); // precio2
         return md5($hash);
     }
 
@@ -3204,6 +3317,9 @@ class TarifaArticuloList extends TarifaArticulo
 
         // precio
         $this->precio->setDbValueDef($rsnew, $this->precio->CurrentValue, null, false);
+
+        // precio2
+        $this->precio2->setDbValueDef($rsnew, $this->precio2->CurrentValue, null, false);
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
@@ -3252,6 +3368,7 @@ class TarifaArticuloList extends TarifaArticulo
         $this->fabricante->AdvancedSearch->load();
         $this->articulo->AdvancedSearch->load();
         $this->precio->AdvancedSearch->load();
+        $this->precio2->AdvancedSearch->load();
         $this->codigo_ims->AdvancedSearch->load();
     }
 
@@ -3553,14 +3670,14 @@ class TarifaArticuloList extends TarifaArticulo
             }
         }
         if ($validMaster) {
-            // Save current master table
-            $this->setCurrentMasterTable($masterTblVar);
-
             // Update URL
             $this->AddUrl = $this->addMasterUrl($this->AddUrl);
             $this->InlineAddUrl = $this->addMasterUrl($this->InlineAddUrl);
             $this->GridAddUrl = $this->addMasterUrl($this->GridAddUrl);
             $this->GridEditUrl = $this->addMasterUrl($this->GridEditUrl);
+
+            // Save current master table
+            $this->setCurrentMasterTable($masterTblVar);
 
             // Reset start record counter (new master key)
             if (!$this->isAddOrEdit()) {

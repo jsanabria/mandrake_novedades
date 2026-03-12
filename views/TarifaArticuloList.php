@@ -25,7 +25,8 @@ loadjs.ready("head", function () {
         ["tarifa", [fields.tarifa.visible && fields.tarifa.required ? ew.Validators.required(fields.tarifa.caption) : null], fields.tarifa.isInvalid],
         ["fabricante", [fields.fabricante.visible && fields.fabricante.required ? ew.Validators.required(fields.fabricante.caption) : null], fields.fabricante.isInvalid],
         ["articulo", [fields.articulo.visible && fields.articulo.required ? ew.Validators.required(fields.articulo.caption) : null], fields.articulo.isInvalid],
-        ["precio", [fields.precio.visible && fields.precio.required ? ew.Validators.required(fields.precio.caption) : null, ew.Validators.float], fields.precio.isInvalid]
+        ["precio", [fields.precio.visible && fields.precio.required ? ew.Validators.required(fields.precio.caption) : null, ew.Validators.float], fields.precio.isInvalid],
+        ["precio2", [fields.precio2.visible && fields.precio2.required ? ew.Validators.required(fields.precio2.caption) : null, ew.Validators.float], fields.precio2.isInvalid]
     ]);
 
     // Set invalid fields
@@ -91,6 +92,8 @@ loadjs.ready("head", function () {
             return false;
         if (ew.valueChanged(fobj, rowIndex, "precio", false))
             return false;
+        if (ew.valueChanged(fobj, rowIndex, "precio2", false))
+            return false;
         return true;
     }
 
@@ -122,7 +125,8 @@ loadjs.ready("head", function () {
         ["tarifa", [], fields.tarifa.isInvalid],
         ["fabricante", [], fields.fabricante.isInvalid],
         ["articulo", [], fields.articulo.isInvalid],
-        ["precio", [], fields.precio.isInvalid]
+        ["precio", [], fields.precio.isInvalid],
+        ["precio2", [], fields.precio2.isInvalid]
     ]);
 
     // Set invalid fields
@@ -423,6 +427,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->precio->Visible) { // precio ?>
         <th data-name="precio" class="<?= $Page->precio->headerCellClass() ?>"><div id="elh_tarifa_articulo_precio" class="tarifa_articulo_precio"><?= $Page->renderSort($Page->precio) ?></div></th>
 <?php } ?>
+<?php if ($Page->precio2->Visible) { // precio2 ?>
+        <th data-name="precio2" class="<?= $Page->precio2->headerCellClass() ?>"><div id="elh_tarifa_articulo_precio2" class="tarifa_articulo_precio2"><?= $Page->renderSort($Page->precio2) ?></div></th>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -719,6 +726,29 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
+    <?php if ($Page->precio2->Visible) { // precio2 ?>
+        <td data-name="precio2" <?= $Page->precio2->cellAttributes() ?>>
+<?php if ($Page->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Page->RowCount ?>_tarifa_articulo_precio2" class="form-group">
+<input type="<?= $Page->precio2->getInputTextType() ?>" data-table="tarifa_articulo" data-field="x_precio2" name="x<?= $Page->RowIndex ?>_precio2" id="x<?= $Page->RowIndex ?>_precio2" size="30" maxlength="13" placeholder="<?= HtmlEncode($Page->precio2->getPlaceHolder()) ?>" value="<?= $Page->precio2->EditValue ?>"<?= $Page->precio2->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->precio2->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="tarifa_articulo" data-field="x_precio2" data-hidden="1" name="o<?= $Page->RowIndex ?>_precio2" id="o<?= $Page->RowIndex ?>_precio2" value="<?= HtmlEncode($Page->precio2->OldValue) ?>">
+<?php } ?>
+<?php if ($Page->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Page->RowCount ?>_tarifa_articulo_precio2" class="form-group">
+<input type="<?= $Page->precio2->getInputTextType() ?>" data-table="tarifa_articulo" data-field="x_precio2" name="x<?= $Page->RowIndex ?>_precio2" id="x<?= $Page->RowIndex ?>_precio2" size="30" maxlength="13" placeholder="<?= HtmlEncode($Page->precio2->getPlaceHolder()) ?>" value="<?= $Page->precio2->EditValue ?>"<?= $Page->precio2->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->precio2->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Page->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Page->RowCount ?>_tarifa_articulo_precio2">
+<span<?= $Page->precio2->viewAttributes() ?>>
+<?= $Page->precio2->getViewValue() ?></span>
+</span>
+<?php } ?>
+</td>
+    <?php } ?>
 <?php
 // Render list options (body, right)
 $Page->ListOptions->render("body", "right", $Page->RowCount);
@@ -841,6 +871,15 @@ loadjs.ready("head", function() {
 <div class="invalid-feedback"><?= $Page->precio->getErrorMessage() ?></div>
 </span>
 <input type="hidden" data-table="tarifa_articulo" data-field="x_precio" data-hidden="1" name="o<?= $Page->RowIndex ?>_precio" id="o<?= $Page->RowIndex ?>_precio" value="<?= HtmlEncode($Page->precio->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Page->precio2->Visible) { // precio2 ?>
+        <td data-name="precio2">
+<span id="el$rowindex$_tarifa_articulo_precio2" class="form-group tarifa_articulo_precio2">
+<input type="<?= $Page->precio2->getInputTextType() ?>" data-table="tarifa_articulo" data-field="x_precio2" name="x<?= $Page->RowIndex ?>_precio2" id="x<?= $Page->RowIndex ?>_precio2" size="30" maxlength="13" placeholder="<?= HtmlEncode($Page->precio2->getPlaceHolder()) ?>" value="<?= $Page->precio2->EditValue ?>"<?= $Page->precio2->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->precio2->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="tarifa_articulo" data-field="x_precio2" data-hidden="1" name="o<?= $Page->RowIndex ?>_precio2" id="o<?= $Page->RowIndex ?>_precio2" value="<?= HtmlEncode($Page->precio2->OldValue) ?>">
 </td>
     <?php } ?>
 <?php

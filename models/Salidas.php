@@ -57,6 +57,7 @@ class Salidas extends DbTable
     public $estatus;
     public $id_documento_padre;
     public $asesor;
+    public $pago_divisa;
     public $dias_credito;
     public $entregado;
     public $fecha_entrega;
@@ -295,6 +296,17 @@ class Salidas extends DbTable
         $this->asesor->Lookup = new Lookup('asesor', 'asesor', false, 'ci_rif', ["nombre","","",""], [], [], [], [], [], [], '`nombre`', '');
         $this->asesor->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->asesor->Param, "CustomMsg");
         $this->Fields['asesor'] = &$this->asesor;
+
+        // pago_divisa
+        $this->pago_divisa = new DbField('salidas', 'salidas', 'x_pago_divisa', 'pago_divisa', '`pago_divisa`', '`pago_divisa`', 202, 1, -1, false, '`pago_divisa`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->pago_divisa->Required = true; // Required field
+        $this->pago_divisa->Sortable = true; // Allow sort
+        $this->pago_divisa->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->pago_divisa->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        $this->pago_divisa->Lookup = new Lookup('pago_divisa', 'salidas', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+        $this->pago_divisa->OptionCount = 2;
+        $this->pago_divisa->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->pago_divisa->Param, "CustomMsg");
+        $this->Fields['pago_divisa'] = &$this->pago_divisa;
 
         // dias_credito
         $this->dias_credito = new DbField('salidas', 'salidas', 'x_dias_credito', 'dias_credito', '`dias_credito`', '`dias_credito`', 16, 4, -1, false, '`dias_credito`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -1000,6 +1012,7 @@ class Salidas extends DbTable
         $this->estatus->DbValue = $row['estatus'];
         $this->id_documento_padre->DbValue = $row['id_documento_padre'];
         $this->asesor->DbValue = $row['asesor'];
+        $this->pago_divisa->DbValue = $row['pago_divisa'];
         $this->dias_credito->DbValue = $row['dias_credito'];
         $this->entregado->DbValue = $row['entregado'];
         $this->fecha_entrega->DbValue = $row['fecha_entrega'];
@@ -1377,6 +1390,7 @@ SORTHTML;
         $this->estatus->setDbValue($row['estatus']);
         $this->id_documento_padre->setDbValue($row['id_documento_padre']);
         $this->asesor->setDbValue($row['asesor']);
+        $this->pago_divisa->setDbValue($row['pago_divisa']);
         $this->dias_credito->setDbValue($row['dias_credito']);
         $this->entregado->setDbValue($row['entregado']);
         $this->fecha_entrega->setDbValue($row['fecha_entrega']);
@@ -1458,6 +1472,8 @@ SORTHTML;
         // id_documento_padre
 
         // asesor
+
+        // pago_divisa
 
         // dias_credito
 
@@ -1715,6 +1731,14 @@ SORTHTML;
             $this->asesor->ViewValue = null;
         }
         $this->asesor->ViewCustomAttributes = "";
+
+        // pago_divisa
+        if (strval($this->pago_divisa->CurrentValue) != "") {
+            $this->pago_divisa->ViewValue = $this->pago_divisa->optionCaption($this->pago_divisa->CurrentValue);
+        } else {
+            $this->pago_divisa->ViewValue = null;
+        }
+        $this->pago_divisa->ViewCustomAttributes = "";
 
         // dias_credito
         $this->dias_credito->ViewValue = $this->dias_credito->CurrentValue;
@@ -2058,6 +2082,11 @@ SORTHTML;
         $this->asesor->HrefValue = "";
         $this->asesor->TooltipValue = "";
 
+        // pago_divisa
+        $this->pago_divisa->LinkCustomAttributes = "";
+        $this->pago_divisa->HrefValue = "";
+        $this->pago_divisa->TooltipValue = "";
+
         // dias_credito
         $this->dias_credito->LinkCustomAttributes = "";
         $this->dias_credito->HrefValue = "";
@@ -2364,6 +2393,12 @@ SORTHTML;
         $this->asesor->EditCustomAttributes = "";
         $this->asesor->PlaceHolder = RemoveHtml($this->asesor->caption());
 
+        // pago_divisa
+        $this->pago_divisa->EditAttrs["class"] = "form-control";
+        $this->pago_divisa->EditCustomAttributes = "";
+        $this->pago_divisa->EditValue = $this->pago_divisa->options(true);
+        $this->pago_divisa->PlaceHolder = RemoveHtml($this->pago_divisa->caption());
+
         // dias_credito
         $this->dias_credito->EditAttrs["class"] = "form-control";
         $this->dias_credito->EditCustomAttributes = "";
@@ -2636,6 +2671,7 @@ SORTHTML;
                     $doc->exportCaption($this->tasa_dia);
                     $doc->exportCaption($this->_username);
                     $doc->exportCaption($this->estatus);
+                    $doc->exportCaption($this->pago_divisa);
                     $doc->exportCaption($this->unidades);
                     $doc->exportCaption($this->monto_base_igtf);
                     $doc->exportCaption($this->monto_igtf);
@@ -2714,6 +2750,7 @@ SORTHTML;
                         $doc->exportField($this->tasa_dia);
                         $doc->exportField($this->_username);
                         $doc->exportField($this->estatus);
+                        $doc->exportField($this->pago_divisa);
                         $doc->exportField($this->unidades);
                         $doc->exportField($this->monto_base_igtf);
                         $doc->exportField($this->monto_igtf);

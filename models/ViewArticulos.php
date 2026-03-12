@@ -44,6 +44,7 @@ class ViewArticulos extends DbTable
     public $cantidad_en_mano;
     public $ultimo_costo;
     public $precio;
+    public $precio2;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -81,7 +82,7 @@ class ViewArticulos extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('view_articulos', 'view_articulos', 'x_id', 'id', '`id`', '`id`', 19, 10, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id = new DbField('view_articulos', 'view_articulos', 'x_id', 'id', '`id`', '`id`', 19, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->Sortable = true; // Allow sort
@@ -142,6 +143,15 @@ class ViewArticulos extends DbTable
         $this->precio->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
         $this->precio->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->precio->Param, "CustomMsg");
         $this->Fields['precio'] = &$this->precio;
+
+        // precio2
+        $this->precio2 = new DbField('view_articulos', 'view_articulos', 'x_precio2', 'precio2', '`precio2`', '`precio2`', 131, 14, -1, false, '`precio2`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->precio2->Nullable = false; // NOT NULL field
+        $this->precio2->Sortable = true; // Allow sort
+        $this->precio2->DefaultDecimalPrecision = 2; // Default decimal precision
+        $this->precio2->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
+        $this->precio2->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->precio2->Param, "CustomMsg");
+        $this->Fields['precio2'] = &$this->precio2;
     }
 
     // Field Visibility
@@ -577,6 +587,7 @@ class ViewArticulos extends DbTable
         $this->cantidad_en_mano->DbValue = $row['cantidad_en_mano'];
         $this->ultimo_costo->DbValue = $row['ultimo_costo'];
         $this->precio->DbValue = $row['precio'];
+        $this->precio2->DbValue = $row['precio2'];
     }
 
     // Delete uploaded files
@@ -905,6 +916,7 @@ SORTHTML;
         $this->cantidad_en_mano->setDbValue($row['cantidad_en_mano']);
         $this->ultimo_costo->setDbValue($row['ultimo_costo']);
         $this->precio->setDbValue($row['precio']);
+        $this->precio2->setDbValue($row['precio2']);
     }
 
     // Render list row values
@@ -932,6 +944,8 @@ SORTHTML;
         // ultimo_costo
 
         // precio
+
+        // precio2
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -985,6 +999,11 @@ SORTHTML;
         $this->precio->ViewValue = FormatNumber($this->precio->ViewValue, 2, -2, -2, -2);
         $this->precio->ViewCustomAttributes = "";
 
+        // precio2
+        $this->precio2->ViewValue = $this->precio2->CurrentValue;
+        $this->precio2->ViewValue = FormatNumber($this->precio2->ViewValue, 2, -2, -2, -2);
+        $this->precio2->ViewCustomAttributes = "";
+
         // id
         $this->id->LinkCustomAttributes = "";
         $this->id->HrefValue = "";
@@ -1024,6 +1043,11 @@ SORTHTML;
         $this->precio->LinkCustomAttributes = "";
         $this->precio->HrefValue = "";
         $this->precio->TooltipValue = "";
+
+        // precio2
+        $this->precio2->LinkCustomAttributes = "";
+        $this->precio2->HrefValue = "";
+        $this->precio2->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1112,6 +1136,15 @@ SORTHTML;
             $this->precio->EditValue = FormatNumber($this->precio->EditValue, -2, -2, -2, -2);
         }
 
+        // precio2
+        $this->precio2->EditAttrs["class"] = "form-control";
+        $this->precio2->EditCustomAttributes = "";
+        $this->precio2->EditValue = $this->precio2->CurrentValue;
+        $this->precio2->PlaceHolder = RemoveHtml($this->precio2->caption());
+        if (strval($this->precio2->EditValue) != "" && is_numeric($this->precio2->EditValue)) {
+            $this->precio2->EditValue = FormatNumber($this->precio2->EditValue, -2, -2, -2, -2);
+        }
+
         // Call Row Rendered event
         $this->rowRendered();
     }
@@ -1147,6 +1180,7 @@ SORTHTML;
                     $doc->exportCaption($this->cantidad_en_mano);
                     $doc->exportCaption($this->ultimo_costo);
                     $doc->exportCaption($this->precio);
+                    $doc->exportCaption($this->precio2);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->referencia);
@@ -1156,6 +1190,7 @@ SORTHTML;
                     $doc->exportCaption($this->cantidad_en_mano);
                     $doc->exportCaption($this->ultimo_costo);
                     $doc->exportCaption($this->precio);
+                    $doc->exportCaption($this->precio2);
                 }
                 $doc->endExportRow();
             }
@@ -1192,6 +1227,7 @@ SORTHTML;
                         $doc->exportField($this->cantidad_en_mano);
                         $doc->exportField($this->ultimo_costo);
                         $doc->exportField($this->precio);
+                        $doc->exportField($this->precio2);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->referencia);
@@ -1201,6 +1237,7 @@ SORTHTML;
                         $doc->exportField($this->cantidad_en_mano);
                         $doc->exportField($this->ultimo_costo);
                         $doc->exportField($this->precio);
+                        $doc->exportField($this->precio2);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1426,20 +1463,21 @@ SORTHTML;
         $articulo = $rsold["id"];
         $costo = $rsnew["ultimo_costo"];
         $precio = $rsnew["precio"];
+        $precio2 = $rsnew["precio2"];
         $sql = "SELECT id FROM tarifa WHERE patron = 'S';";
         $tarifa = ExecuteScalar($sql);
-        $sql = "UPDATE articulo SET ultimo_costo = $costo, precio = $precio WHERE id = $articulo;";
+        $sql = "UPDATE articulo SET ultimo_costo = $costo, precio = $precio, precio2 = $precio2 WHERE id = $articulo;";
         Execute($sql);
         $sql = "SELECT articulo FROM tarifa_articulo WHERE tarifa = $tarifa AND articulo = $articulo;";
         if($row = ExecuteRow($sql)) {
-        	$sql = "UPDATE tarifa_articulo SET precio = $precio WHERE tarifa = $tarifa AND articulo = $articulo;";
+        	$sql = "UPDATE tarifa_articulo SET precio = $precio, precio2 = $precio2 WHERE tarifa = $tarifa AND articulo = $articulo;";
         	Execute($sql);
         }
         else {
         	$sql = "INSERT INTO tarifa_articulo
-        				(id, tarifa, fabricante, articulo, precio)
+        				(id, tarifa, fabricante, articulo, precio, precio2)
         			SELECT
-        				NULL id, $tarifa AS tarifa, fabricante, id, $precio AS precio
+        				NULL id, $tarifa AS tarifa, fabricante, id, $precio AS precio, $precio2 AS precio2 
         			FROM articulo WHERE id = $articulo;";
         	Execute($sql);
         }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2026/2/21" version="17.0.4" id="es-419" name="Spanish" desc="Spanish" author="ELA83">
+<ew-language date="2026/3/12" version="17.0.4" id="es-419" name="Spanish" desc="Spanish" author="ELA83">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -1676,6 +1676,9 @@
       </field>
       <field id="precio">
         <phrase id="fldcaption" value="Precio" />
+      </field>
+      <field id="precio2">
+        <phrase id="fldcaption" value="Precio 2" />
       </field>
       <field id="alicuota">
         <phrase id="fldcaption" value="Alicuota" />
@@ -3748,6 +3751,13 @@
       <field id="asesor">
         <phrase id="fldcaption" value="Vendedor" />
       </field>
+      <field id="pago_divisa">
+        <phrase id="fldcaption" value="Pago en Divisa" />
+        <phrase id="fldtagvalue1" value="S" />
+        <phrase id="fldtagcaption1" value="SI" />
+        <phrase id="fldtagvalue2" value="N" />
+        <phrase id="fldtagcaption2" value="NO" />
+      </field>
       <field id="dias_credito">
         <phrase id="fldcaption" value="Días Crédito" />
       </field>
@@ -4049,6 +4059,9 @@
       </field>
       <field id="precio">
         <phrase id="fldcaption" value="Precio" />
+      </field>
+      <field id="precio2">
+        <phrase id="fldcaption" value="Precio 2" />
       </field>
       <field id="codigo_ims">
         <phrase id="fldcaption" value="codigo ims" />
@@ -4385,6 +4398,9 @@
       </field>
       <field id="precio">
         <phrase id="fldcaption" value="Precio" />
+      </field>
+      <field id="precio2">
+        <phrase id="fldcaption" value="Precio 2" />
       </field>
     </table>
     <table id="view_banco">

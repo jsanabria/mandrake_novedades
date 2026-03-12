@@ -387,6 +387,7 @@ class TarifaArticuloDelete extends TarifaArticulo
         $this->fabricante->setVisibility();
         $this->articulo->setVisibility();
         $this->precio->setVisibility();
+        $this->precio2->setVisibility();
         $this->codigo_ims->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -561,6 +562,7 @@ class TarifaArticuloDelete extends TarifaArticulo
         $this->fabricante->setDbValue($row['fabricante']);
         $this->articulo->setDbValue($row['articulo']);
         $this->precio->setDbValue($row['precio']);
+        $this->precio2->setDbValue($row['precio2']);
         $this->codigo_ims->setDbValue($row['codigo_ims']);
     }
 
@@ -573,6 +575,7 @@ class TarifaArticuloDelete extends TarifaArticulo
         $row['fabricante'] = null;
         $row['articulo'] = null;
         $row['precio'] = null;
+        $row['precio2'] = null;
         $row['codigo_ims'] = null;
         return $row;
     }
@@ -589,6 +592,11 @@ class TarifaArticuloDelete extends TarifaArticulo
             $this->precio->CurrentValue = ConvertToFloatString($this->precio->CurrentValue);
         }
 
+        // Convert decimal values if posted back
+        if ($this->precio2->FormValue == $this->precio2->CurrentValue && is_numeric(ConvertToFloatString($this->precio2->CurrentValue))) {
+            $this->precio2->CurrentValue = ConvertToFloatString($this->precio2->CurrentValue);
+        }
+
         // Call Row_Rendering event
         $this->rowRendering();
 
@@ -603,6 +611,8 @@ class TarifaArticuloDelete extends TarifaArticulo
         // articulo
 
         // precio
+
+        // precio2
 
         // codigo_ims
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -686,6 +696,11 @@ class TarifaArticuloDelete extends TarifaArticulo
             $this->precio->ViewValue = FormatNumber($this->precio->ViewValue, 2, -1, -1, -1);
             $this->precio->ViewCustomAttributes = "";
 
+            // precio2
+            $this->precio2->ViewValue = $this->precio2->CurrentValue;
+            $this->precio2->ViewValue = FormatNumber($this->precio2->ViewValue, 2, -2, -2, -2);
+            $this->precio2->ViewCustomAttributes = "";
+
             // codigo_ims
             $this->codigo_ims->ViewValue = $this->codigo_ims->CurrentValue;
             $this->codigo_ims->ViewCustomAttributes = "";
@@ -709,6 +724,11 @@ class TarifaArticuloDelete extends TarifaArticulo
             $this->precio->LinkCustomAttributes = "";
             $this->precio->HrefValue = "";
             $this->precio->TooltipValue = "";
+
+            // precio2
+            $this->precio2->LinkCustomAttributes = "";
+            $this->precio2->HrefValue = "";
+            $this->precio2->TooltipValue = "";
         }
 
         // Call Row Rendered event

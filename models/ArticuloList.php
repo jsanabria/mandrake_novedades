@@ -642,6 +642,7 @@ class ArticuloList extends Articulo
         $this->ultimo_costo->Visible = false;
         $this->descuento->setVisibility();
         $this->precio->Visible = false;
+        $this->precio2->Visible = false;
         $this->alicuota->Visible = false;
         $this->articulo_inventario->Visible = false;
         $this->activo->setVisibility();
@@ -1001,6 +1002,7 @@ class ArticuloList extends Articulo
         $filterList = Concat($filterList, $this->ultimo_costo->AdvancedSearch->toJson(), ","); // Field ultimo_costo
         $filterList = Concat($filterList, $this->descuento->AdvancedSearch->toJson(), ","); // Field descuento
         $filterList = Concat($filterList, $this->precio->AdvancedSearch->toJson(), ","); // Field precio
+        $filterList = Concat($filterList, $this->precio2->AdvancedSearch->toJson(), ","); // Field precio2
         $filterList = Concat($filterList, $this->alicuota->AdvancedSearch->toJson(), ","); // Field alicuota
         $filterList = Concat($filterList, $this->articulo_inventario->AdvancedSearch->toJson(), ","); // Field articulo_inventario
         $filterList = Concat($filterList, $this->activo->AdvancedSearch->toJson(), ","); // Field activo
@@ -1215,6 +1217,14 @@ class ArticuloList extends Articulo
         $this->precio->AdvancedSearch->SearchOperator2 = @$filter["w_precio"];
         $this->precio->AdvancedSearch->save();
 
+        // Field precio2
+        $this->precio2->AdvancedSearch->SearchValue = @$filter["x_precio2"];
+        $this->precio2->AdvancedSearch->SearchOperator = @$filter["z_precio2"];
+        $this->precio2->AdvancedSearch->SearchCondition = @$filter["v_precio2"];
+        $this->precio2->AdvancedSearch->SearchValue2 = @$filter["y_precio2"];
+        $this->precio2->AdvancedSearch->SearchOperator2 = @$filter["w_precio2"];
+        $this->precio2->AdvancedSearch->save();
+
         // Field alicuota
         $this->alicuota->AdvancedSearch->SearchValue = @$filter["x_alicuota"];
         $this->alicuota->AdvancedSearch->SearchOperator = @$filter["z_alicuota"];
@@ -1295,6 +1305,7 @@ class ArticuloList extends Articulo
         $this->buildSearchSql($where, $this->ultimo_costo, $default, false); // ultimo_costo
         $this->buildSearchSql($where, $this->descuento, $default, false); // descuento
         $this->buildSearchSql($where, $this->precio, $default, false); // precio
+        $this->buildSearchSql($where, $this->precio2, $default, false); // precio2
         $this->buildSearchSql($where, $this->alicuota, $default, false); // alicuota
         $this->buildSearchSql($where, $this->articulo_inventario, $default, false); // articulo_inventario
         $this->buildSearchSql($where, $this->activo, $default, false); // activo
@@ -1328,6 +1339,7 @@ class ArticuloList extends Articulo
             $this->ultimo_costo->AdvancedSearch->save(); // ultimo_costo
             $this->descuento->AdvancedSearch->save(); // descuento
             $this->precio->AdvancedSearch->save(); // precio
+            $this->precio2->AdvancedSearch->save(); // precio2
             $this->alicuota->AdvancedSearch->save(); // alicuota
             $this->articulo_inventario->AdvancedSearch->save(); // articulo_inventario
             $this->activo->AdvancedSearch->save(); // activo
@@ -1597,6 +1609,9 @@ class ArticuloList extends Articulo
         if ($this->precio->AdvancedSearch->issetSession()) {
             return true;
         }
+        if ($this->precio2->AdvancedSearch->issetSession()) {
+            return true;
+        }
         if ($this->alicuota->AdvancedSearch->issetSession()) {
             return true;
         }
@@ -1668,6 +1683,7 @@ class ArticuloList extends Articulo
                 $this->ultimo_costo->AdvancedSearch->unsetSession();
                 $this->descuento->AdvancedSearch->unsetSession();
                 $this->precio->AdvancedSearch->unsetSession();
+                $this->precio2->AdvancedSearch->unsetSession();
                 $this->alicuota->AdvancedSearch->unsetSession();
                 $this->articulo_inventario->AdvancedSearch->unsetSession();
                 $this->activo->AdvancedSearch->unsetSession();
@@ -1706,6 +1722,7 @@ class ArticuloList extends Articulo
                 $this->ultimo_costo->AdvancedSearch->load();
                 $this->descuento->AdvancedSearch->load();
                 $this->precio->AdvancedSearch->load();
+                $this->precio2->AdvancedSearch->load();
                 $this->alicuota->AdvancedSearch->load();
                 $this->articulo_inventario->AdvancedSearch->load();
                 $this->activo->AdvancedSearch->load();
@@ -1796,6 +1813,7 @@ class ArticuloList extends Articulo
                 $this->ultimo_costo->setSort("");
                 $this->descuento->setSort("");
                 $this->precio->setSort("");
+                $this->precio2->setSort("");
                 $this->alicuota->setSort("");
                 $this->articulo_inventario->setSort("");
                 $this->activo->setSort("");
@@ -2570,6 +2588,14 @@ class ArticuloList extends Articulo
             }
         }
 
+        // precio2
+        if (!$this->isAddOrEdit() && $this->precio2->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->precio2->AdvancedSearch->SearchValue != "" || $this->precio2->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
         // alicuota
         if (!$this->isAddOrEdit() && $this->alicuota->AdvancedSearch->get()) {
             $hasValue = true;
@@ -2710,6 +2736,7 @@ class ArticuloList extends Articulo
         $this->ultimo_costo->setDbValue($row['ultimo_costo']);
         $this->descuento->setDbValue($row['descuento']);
         $this->precio->setDbValue($row['precio']);
+        $this->precio2->setDbValue($row['precio2']);
         $this->alicuota->setDbValue($row['alicuota']);
         $this->articulo_inventario->setDbValue($row['articulo_inventario']);
         $this->activo->setDbValue($row['activo']);
@@ -2743,6 +2770,7 @@ class ArticuloList extends Articulo
         $row['ultimo_costo'] = null;
         $row['descuento'] = null;
         $row['precio'] = null;
+        $row['precio2'] = null;
         $row['alicuota'] = null;
         $row['articulo_inventario'] = null;
         $row['activo'] = null;
@@ -2847,6 +2875,8 @@ class ArticuloList extends Articulo
         // descuento
 
         // precio
+
+        // precio2
 
         // alicuota
 
@@ -3045,6 +3075,11 @@ class ArticuloList extends Articulo
             $this->precio->ViewValue = $this->precio->CurrentValue;
             $this->precio->ViewValue = FormatNumber($this->precio->ViewValue, 2, -1, -1, -1);
             $this->precio->ViewCustomAttributes = "";
+
+            // precio2
+            $this->precio2->ViewValue = $this->precio2->CurrentValue;
+            $this->precio2->ViewValue = FormatNumber($this->precio2->ViewValue, 2, -2, -2, -2);
+            $this->precio2->ViewCustomAttributes = "";
 
             // alicuota
             $curVal = trim(strval($this->alicuota->CurrentValue));
@@ -3316,6 +3351,7 @@ class ArticuloList extends Articulo
         $this->ultimo_costo->AdvancedSearch->load();
         $this->descuento->AdvancedSearch->load();
         $this->precio->AdvancedSearch->load();
+        $this->precio2->AdvancedSearch->load();
         $this->alicuota->AdvancedSearch->load();
         $this->articulo_inventario->AdvancedSearch->load();
         $this->activo->AdvancedSearch->load();

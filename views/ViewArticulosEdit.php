@@ -26,7 +26,8 @@ loadjs.ready("head", function () {
         ["nombre", [fields.nombre.visible && fields.nombre.required ? ew.Validators.required(fields.nombre.caption) : null], fields.nombre.isInvalid],
         ["cantidad_en_mano", [fields.cantidad_en_mano.visible && fields.cantidad_en_mano.required ? ew.Validators.required(fields.cantidad_en_mano.caption) : null], fields.cantidad_en_mano.isInvalid],
         ["ultimo_costo", [fields.ultimo_costo.visible && fields.ultimo_costo.required ? ew.Validators.required(fields.ultimo_costo.caption) : null, ew.Validators.float], fields.ultimo_costo.isInvalid],
-        ["precio", [fields.precio.visible && fields.precio.required ? ew.Validators.required(fields.precio.caption) : null, ew.Validators.float], fields.precio.isInvalid]
+        ["precio", [fields.precio.visible && fields.precio.required ? ew.Validators.required(fields.precio.caption) : null, ew.Validators.float], fields.precio.isInvalid],
+        ["precio2", [fields.precio2.visible && fields.precio2.required ? ew.Validators.required(fields.precio2.caption) : null, ew.Validators.float], fields.precio2.isInvalid]
     ]);
 
     // Set invalid fields
@@ -201,6 +202,18 @@ $Page->showMessage();
 <input type="<?= $Page->precio->getInputTextType() ?>" data-table="view_articulos" data-field="x_precio" name="x_precio" id="x_precio" size="10" maxlength="14" placeholder="<?= HtmlEncode($Page->precio->getPlaceHolder()) ?>" value="<?= $Page->precio->EditValue ?>"<?= $Page->precio->editAttributes() ?> aria-describedby="x_precio_help">
 <?= $Page->precio->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->precio->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->precio2->Visible) { // precio2 ?>
+    <div id="r_precio2" class="form-group row">
+        <label id="elh_view_articulos_precio2" for="x_precio2" class="<?= $Page->LeftColumnClass ?>"><?= $Page->precio2->caption() ?><?= $Page->precio2->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->precio2->cellAttributes() ?>>
+<span id="el_view_articulos_precio2">
+<input type="<?= $Page->precio2->getInputTextType() ?>" data-table="view_articulos" data-field="x_precio2" name="x_precio2" id="x_precio2" size="10" maxlength="14" placeholder="<?= HtmlEncode($Page->precio2->getPlaceHolder()) ?>" value="<?= $Page->precio2->EditValue ?>"<?= $Page->precio2->editAttributes() ?> aria-describedby="x_precio2_help">
+<?= $Page->precio2->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->precio2->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

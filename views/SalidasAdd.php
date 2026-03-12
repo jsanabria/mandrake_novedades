@@ -28,7 +28,9 @@ loadjs.ready("head", function () {
         ["lista_pedido", [fields.lista_pedido.visible && fields.lista_pedido.required ? ew.Validators.required(fields.lista_pedido.caption) : null], fields.lista_pedido.isInvalid],
         ["nota", [fields.nota.visible && fields.nota.required ? ew.Validators.required(fields.nota.caption) : null], fields.nota.isInvalid],
         ["asesor", [fields.asesor.visible && fields.asesor.required ? ew.Validators.required(fields.asesor.caption) : null], fields.asesor.isInvalid],
+        ["pago_divisa", [fields.pago_divisa.visible && fields.pago_divisa.required ? ew.Validators.required(fields.pago_divisa.caption) : null], fields.pago_divisa.isInvalid],
         ["descuento", [fields.descuento.visible && fields.descuento.required ? ew.Validators.required(fields.descuento.caption) : null, ew.Validators.float], fields.descuento.isInvalid],
+        ["ci_rif", [fields.ci_rif.visible && fields.ci_rif.required ? ew.Validators.required(fields.ci_rif.caption) : null], fields.ci_rif.isInvalid],
         ["nro_despacho", [fields.nro_despacho.visible && fields.nro_despacho.required ? ew.Validators.required(fields.nro_despacho.caption) : null], fields.nro_despacho.isInvalid],
         ["igtf", [fields.igtf.visible && fields.igtf.required ? ew.Validators.required(fields.igtf.caption) : null], fields.igtf.isInvalid]
     ]);
@@ -102,7 +104,9 @@ loadjs.ready("head", function () {
     fsalidasadd.lists.moneda = <?= $Page->moneda->toClientList($Page) ?>;
     fsalidasadd.lists.lista_pedido = <?= $Page->lista_pedido->toClientList($Page) ?>;
     fsalidasadd.lists.asesor = <?= $Page->asesor->toClientList($Page) ?>;
+    fsalidasadd.lists.pago_divisa = <?= $Page->pago_divisa->toClientList($Page) ?>;
     fsalidasadd.lists.descuento = <?= $Page->descuento->toClientList($Page) ?>;
+    fsalidasadd.lists.ci_rif = <?= $Page->ci_rif->toClientList($Page) ?>;
     fsalidasadd.lists.igtf = <?= $Page->igtf->toClientList($Page) ?>;
     loadjs.done("fsalidasadd");
 });
@@ -328,6 +332,39 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->pago_divisa->Visible) { // pago_divisa ?>
+    <div id="r_pago_divisa" class="form-group row">
+        <label id="elh_salidas_pago_divisa" for="x_pago_divisa" class="<?= $Page->LeftColumnClass ?>"><?= $Page->pago_divisa->caption() ?><?= $Page->pago_divisa->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->pago_divisa->cellAttributes() ?>>
+<span id="el_salidas_pago_divisa">
+    <select
+        id="x_pago_divisa"
+        name="x_pago_divisa"
+        class="form-control ew-select<?= $Page->pago_divisa->isInvalidClass() ?>"
+        data-select2-id="salidas_x_pago_divisa"
+        data-table="salidas"
+        data-field="x_pago_divisa"
+        data-value-separator="<?= $Page->pago_divisa->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->pago_divisa->getPlaceHolder()) ?>"
+        <?= $Page->pago_divisa->editAttributes() ?>>
+        <?= $Page->pago_divisa->selectOptionListHtml("x_pago_divisa") ?>
+    </select>
+    <?= $Page->pago_divisa->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->pago_divisa->getErrorMessage() ?></div>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='salidas_x_pago_divisa']"),
+        options = { name: "x_pago_divisa", selectId: "salidas_x_pago_divisa", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.data = ew.vars.tables.salidas.fields.pago_divisa.lookupOptions;
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.salidas.fields.pago_divisa.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->descuento->Visible) { // descuento ?>
     <div id="r_descuento" class="form-group row">
         <label id="elh_salidas_descuento" class="<?= $Page->LeftColumnClass ?>"><?= $Page->descuento->caption() ?><?= $Page->descuento->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -355,6 +392,38 @@ loadjs.ready(["fsalidasadd"], function() {
 });
 </script>
 <?= $Page->descuento->Lookup->getParamTag($Page, "p_x_descuento") ?>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->ci_rif->Visible) { // ci_rif ?>
+    <div id="r_ci_rif" class="form-group row">
+        <label id="elh_salidas_ci_rif" class="<?= $Page->LeftColumnClass ?>"><?= $Page->ci_rif->caption() ?><?= $Page->ci_rif->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->ci_rif->cellAttributes() ?>>
+<span id="el_salidas_ci_rif">
+<template id="tp_x_ci_rif">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="salidas" data-field="x_ci_rif" name="x_ci_rif" id="x_ci_rif"<?= $Page->ci_rif->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_ci_rif" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_ci_rif"
+    name="x_ci_rif"
+    value="<?= HtmlEncode($Page->ci_rif->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_ci_rif"
+    data-target="dsl_x_ci_rif"
+    data-repeatcolumn="5"
+    class="form-control<?= $Page->ci_rif->isInvalidClass() ?>"
+    data-table="salidas"
+    data-field="x_ci_rif"
+    data-value-separator="<?= $Page->ci_rif->displayValueSeparatorAttribute() ?>"
+    <?= $Page->ci_rif->editAttributes() ?>>
+<?= $Page->ci_rif->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->ci_rif->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
@@ -531,5 +600,96 @@ loadjs.ready("load", function () {
     	.always(function(data) {
     	});
     });
+
+    // Función para aplicar el bloqueo físico y visual
+    function forzarBloqueoSelect2() {
+        var $el = $("#x_pago_divisa");
+
+        // Verificamos si tiene selección (distinto de vacío)
+        if ($el.val() && $el.val() !== "") {
+            // 1. Bloqueamos el select original
+            $el.attr("readonly", "readonly");
+
+            // 2. Bloqueamos el contenedor que Select2 dibuja en pantalla
+            // PHPMaker usa la clase .select2-container
+            var $container = $el.next(".select2-container");
+            $container.css({
+                "pointer-events": "none",
+                "filter": "grayscale(100%)",
+                "opacity": "0.6"
+            });
+
+            // 3. Evitamos que se abra incluso con teclado
+            $el.on("select2:opening", function(e) {
+                e.preventDefault();
+            });
+        }
+    }
+
+    // Escuchar el cambio
+    $(document).on("change", "#x_pago_divisa", function() {
+        // Damos un margen de 100ms para que Select2 procese el cambio interno
+        setTimeout(forzarBloqueoSelect2, 100);
+    });
+
+    // Ejecutar al cargar (con un pequeño delay por seguridad)
+    setTimeout(forzarBloqueoSelect2, 500);
+
+    //////////////////////////////////////////////////////////////////////////////////
+    // Aseguramos que la función seleccionarPrecio esté disponible
+    // 1. Monitorear el cambio del artículo (Evento oficial de PHPMaker)
+    $(document).on("change", "input[id*='_cantidad_articulo']", function() {
+        var $el = $(this);
+        var cantidad = $el.val();
+        var idFull = $el.attr("id"); 
+        var rowIdx = idFull.replace(/[^0-9]/g, '');
+        var idArticulo = $("#x" + rowIdx + "_articulo").val();
+
+        // Si hay artículo y ya pusieron una cantidad, lanzamos el modal
+        if (idArticulo && cantidad > 0) {
+            seleccionarPrecio(rowIdx, idArticulo);
+        }
+    });
+
+    // 2. Función de selección de precios
+    function seleccionarPrecio(rowIdx, idArticulo) {
+        var pagoDivisa = $("#x_pago_divisa").val(); 
+        $.get("include/get_precios.php?id=" + idArticulo, function(data) {
+            var precios = JSON.parse(data);
+            if (!precios) return;
+            Swal.fire({
+                title: 'Seleccione un Precio',
+                html: `
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-primary btn-lg btn-precio" 
+                            data-valor="${precios.precio}" ${pagoDivisa === 'S' ? 'disabled' : ''}>
+                            Precio a pagar por unidad en Bs.: ${precios.precio}
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-lg btn-precio" 
+                            data-valor="${precios.precio2}" ${pagoDivisa !== 'S' ? 'disabled' : ''}>
+                            Precio a pagar por unidad USD: ${precios.precio2}
+                        </button>
+                    </div>
+                `,
+                showConfirmButton: false,
+                didOpen: () => {
+    // Dentro de .btn-precio click:
+    $(".btn-precio").on("click", function() {
+        var precioElegido = $(this).data("valor");
+        var $inputPrecio = $("#x" + rowIdx + "_precio_unidad");
+
+        // 1. Asignamos y disparamos tus validaciones (AJAX Clave, etc.)
+        // $inputPrecio.val(precioElegido).trigger("change");
+        Swal.close();
+
+        // 2. Foco de vuelta al precio para edición final
+        setTimeout(function() {
+            $inputPrecio.focus().select();
+        }, 300);
+    });             
+                }
+            });
+        });
+    }
 });
 </script>

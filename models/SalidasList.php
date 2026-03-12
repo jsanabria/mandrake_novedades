@@ -642,6 +642,7 @@ class SalidasList extends Salidas
         $this->estatus->setVisibility();
         $this->id_documento_padre->Visible = false;
         $this->asesor->setVisibility();
+        $this->pago_divisa->Visible = false;
         $this->dias_credito->Visible = false;
         $this->entregado->Visible = false;
         $this->fecha_entrega->Visible = false;
@@ -1026,6 +1027,7 @@ class SalidasList extends Salidas
         $filterList = Concat($filterList, $this->estatus->AdvancedSearch->toJson(), ","); // Field estatus
         $filterList = Concat($filterList, $this->id_documento_padre->AdvancedSearch->toJson(), ","); // Field id_documento_padre
         $filterList = Concat($filterList, $this->asesor->AdvancedSearch->toJson(), ","); // Field asesor
+        $filterList = Concat($filterList, $this->pago_divisa->AdvancedSearch->toJson(), ","); // Field pago_divisa
         $filterList = Concat($filterList, $this->dias_credito->AdvancedSearch->toJson(), ","); // Field dias_credito
         $filterList = Concat($filterList, $this->entregado->AdvancedSearch->toJson(), ","); // Field entregado
         $filterList = Concat($filterList, $this->fecha_entrega->AdvancedSearch->toJson(), ","); // Field fecha_entrega
@@ -1261,6 +1263,14 @@ class SalidasList extends Salidas
         $this->asesor->AdvancedSearch->SearchValue2 = @$filter["y_asesor"];
         $this->asesor->AdvancedSearch->SearchOperator2 = @$filter["w_asesor"];
         $this->asesor->AdvancedSearch->save();
+
+        // Field pago_divisa
+        $this->pago_divisa->AdvancedSearch->SearchValue = @$filter["x_pago_divisa"];
+        $this->pago_divisa->AdvancedSearch->SearchOperator = @$filter["z_pago_divisa"];
+        $this->pago_divisa->AdvancedSearch->SearchCondition = @$filter["v_pago_divisa"];
+        $this->pago_divisa->AdvancedSearch->SearchValue2 = @$filter["y_pago_divisa"];
+        $this->pago_divisa->AdvancedSearch->SearchOperator2 = @$filter["w_pago_divisa"];
+        $this->pago_divisa->AdvancedSearch->save();
 
         // Field dias_credito
         $this->dias_credito->AdvancedSearch->SearchValue = @$filter["x_dias_credito"];
@@ -1518,6 +1528,7 @@ class SalidasList extends Salidas
         $this->buildSearchSql($where, $this->estatus, $default, false); // estatus
         $this->buildSearchSql($where, $this->id_documento_padre, $default, false); // id_documento_padre
         $this->buildSearchSql($where, $this->asesor, $default, false); // asesor
+        $this->buildSearchSql($where, $this->pago_divisa, $default, false); // pago_divisa
         $this->buildSearchSql($where, $this->dias_credito, $default, false); // dias_credito
         $this->buildSearchSql($where, $this->entregado, $default, false); // entregado
         $this->buildSearchSql($where, $this->fecha_entrega, $default, false); // fecha_entrega
@@ -1573,6 +1584,7 @@ class SalidasList extends Salidas
             $this->estatus->AdvancedSearch->save(); // estatus
             $this->id_documento_padre->AdvancedSearch->save(); // id_documento_padre
             $this->asesor->AdvancedSearch->save(); // asesor
+            $this->pago_divisa->AdvancedSearch->save(); // pago_divisa
             $this->dias_credito->AdvancedSearch->save(); // dias_credito
             $this->entregado->AdvancedSearch->save(); // entregado
             $this->fecha_entrega->AdvancedSearch->save(); // fecha_entrega
@@ -1871,6 +1883,9 @@ class SalidasList extends Salidas
         if ($this->asesor->AdvancedSearch->issetSession()) {
             return true;
         }
+        if ($this->pago_divisa->AdvancedSearch->issetSession()) {
+            return true;
+        }
         if ($this->dias_credito->AdvancedSearch->issetSession()) {
             return true;
         }
@@ -2009,6 +2024,7 @@ class SalidasList extends Salidas
                 $this->estatus->AdvancedSearch->unsetSession();
                 $this->id_documento_padre->AdvancedSearch->unsetSession();
                 $this->asesor->AdvancedSearch->unsetSession();
+                $this->pago_divisa->AdvancedSearch->unsetSession();
                 $this->dias_credito->AdvancedSearch->unsetSession();
                 $this->entregado->AdvancedSearch->unsetSession();
                 $this->fecha_entrega->AdvancedSearch->unsetSession();
@@ -2069,6 +2085,7 @@ class SalidasList extends Salidas
                 $this->estatus->AdvancedSearch->load();
                 $this->id_documento_padre->AdvancedSearch->load();
                 $this->asesor->AdvancedSearch->load();
+                $this->pago_divisa->AdvancedSearch->load();
                 $this->dias_credito->AdvancedSearch->load();
                 $this->entregado->AdvancedSearch->load();
                 $this->fecha_entrega->AdvancedSearch->load();
@@ -2187,6 +2204,7 @@ class SalidasList extends Salidas
                 $this->estatus->setSort("");
                 $this->id_documento_padre->setSort("");
                 $this->asesor->setSort("");
+                $this->pago_divisa->setSort("");
                 $this->dias_credito->setSort("");
                 $this->entregado->setSort("");
                 $this->fecha_entrega->setSort("");
@@ -3018,6 +3036,14 @@ class SalidasList extends Salidas
             }
         }
 
+        // pago_divisa
+        if (!$this->isAddOrEdit() && $this->pago_divisa->AdvancedSearch->get()) {
+            $hasValue = true;
+            if (($this->pago_divisa->AdvancedSearch->SearchValue != "" || $this->pago_divisa->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+                $this->Command = "search";
+            }
+        }
+
         // dias_credito
         if (!$this->isAddOrEdit() && $this->dias_credito->AdvancedSearch->get()) {
             $hasValue = true;
@@ -3333,6 +3359,7 @@ class SalidasList extends Salidas
         $this->estatus->setDbValue($row['estatus']);
         $this->id_documento_padre->setDbValue($row['id_documento_padre']);
         $this->asesor->setDbValue($row['asesor']);
+        $this->pago_divisa->setDbValue($row['pago_divisa']);
         $this->dias_credito->setDbValue($row['dias_credito']);
         $this->entregado->setDbValue($row['entregado']);
         $this->fecha_entrega->setDbValue($row['fecha_entrega']);
@@ -3388,6 +3415,7 @@ class SalidasList extends Salidas
         $row['estatus'] = null;
         $row['id_documento_padre'] = null;
         $row['asesor'] = null;
+        $row['pago_divisa'] = null;
         $row['dias_credito'] = null;
         $row['entregado'] = null;
         $row['fecha_entrega'] = null;
@@ -3514,6 +3542,8 @@ class SalidasList extends Salidas
         // id_documento_padre
 
         // asesor
+
+        // pago_divisa
 
         // dias_credito
 
@@ -3754,6 +3784,14 @@ class SalidasList extends Salidas
                 $this->asesor->ViewValue = null;
             }
             $this->asesor->ViewCustomAttributes = "";
+
+            // pago_divisa
+            if (strval($this->pago_divisa->CurrentValue) != "") {
+                $this->pago_divisa->ViewValue = $this->pago_divisa->optionCaption($this->pago_divisa->CurrentValue);
+            } else {
+                $this->pago_divisa->ViewValue = null;
+            }
+            $this->pago_divisa->ViewCustomAttributes = "";
 
             // unidades
             $this->unidades->ViewValue = $this->unidades->CurrentValue;
@@ -4134,6 +4172,7 @@ class SalidasList extends Salidas
         $this->estatus->AdvancedSearch->load();
         $this->id_documento_padre->AdvancedSearch->load();
         $this->asesor->AdvancedSearch->load();
+        $this->pago_divisa->AdvancedSearch->load();
         $this->dias_credito->AdvancedSearch->load();
         $this->entregado->AdvancedSearch->load();
         $this->fecha_entrega->AdvancedSearch->load();
@@ -4447,6 +4486,8 @@ class SalidasList extends Salidas
                         return ($this->PageID == "add" OR $this->PageID == "edit") ? "activo = 'S'" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x_pago_divisa":
                     break;
                 case "x_entregado":
                     break;

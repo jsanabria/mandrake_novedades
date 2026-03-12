@@ -41,6 +41,7 @@ class TarifaArticulo extends DbTable
     public $fabricante;
     public $articulo;
     public $precio;
+    public $precio2;
     public $codigo_ims;
 
     // Page ID
@@ -129,6 +130,14 @@ class TarifaArticulo extends DbTable
         $this->precio->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
         $this->precio->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->precio->Param, "CustomMsg");
         $this->Fields['precio'] = &$this->precio;
+
+        // precio2
+        $this->precio2 = new DbField('tarifa_articulo', 'tarifa_articulo', 'x_precio2', 'precio2', '`precio2`', '`precio2`', 131, 13, -1, false, '`precio2`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->precio2->Sortable = true; // Allow sort
+        $this->precio2->DefaultDecimalPrecision = 2; // Default decimal precision
+        $this->precio2->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
+        $this->precio2->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->precio2->Param, "CustomMsg");
+        $this->Fields['precio2'] = &$this->precio2;
 
         // codigo_ims
         $this->codigo_ims = new DbField('tarifa_articulo', 'tarifa_articulo', 'x_codigo_ims', 'codigo_ims', '`codigo_ims`', '`codigo_ims`', 200, 20, -1, false, '`codigo_ims`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -619,6 +628,7 @@ class TarifaArticulo extends DbTable
         $this->fabricante->DbValue = $row['fabricante'];
         $this->articulo->DbValue = $row['articulo'];
         $this->precio->DbValue = $row['precio'];
+        $this->precio2->DbValue = $row['precio2'];
         $this->codigo_ims->DbValue = $row['codigo_ims'];
     }
 
@@ -949,6 +959,7 @@ SORTHTML;
         $this->fabricante->setDbValue($row['fabricante']);
         $this->articulo->setDbValue($row['articulo']);
         $this->precio->setDbValue($row['precio']);
+        $this->precio2->setDbValue($row['precio2']);
         $this->codigo_ims->setDbValue($row['codigo_ims']);
     }
 
@@ -971,6 +982,8 @@ SORTHTML;
         // articulo
 
         // precio
+
+        // precio2
 
         // codigo_ims
 
@@ -1054,6 +1067,11 @@ SORTHTML;
         $this->precio->ViewValue = FormatNumber($this->precio->ViewValue, 2, -1, -1, -1);
         $this->precio->ViewCustomAttributes = "";
 
+        // precio2
+        $this->precio2->ViewValue = $this->precio2->CurrentValue;
+        $this->precio2->ViewValue = FormatNumber($this->precio2->ViewValue, 2, -2, -2, -2);
+        $this->precio2->ViewCustomAttributes = "";
+
         // codigo_ims
         $this->codigo_ims->ViewValue = $this->codigo_ims->CurrentValue;
         $this->codigo_ims->ViewCustomAttributes = "";
@@ -1082,6 +1100,11 @@ SORTHTML;
         $this->precio->LinkCustomAttributes = "";
         $this->precio->HrefValue = "";
         $this->precio->TooltipValue = "";
+
+        // precio2
+        $this->precio2->LinkCustomAttributes = "";
+        $this->precio2->HrefValue = "";
+        $this->precio2->TooltipValue = "";
 
         // codigo_ims
         $this->codigo_ims->LinkCustomAttributes = "";
@@ -1160,6 +1183,15 @@ SORTHTML;
             $this->precio->EditValue = FormatNumber($this->precio->EditValue, -2, -1, -2, -1);
         }
 
+        // precio2
+        $this->precio2->EditAttrs["class"] = "form-control";
+        $this->precio2->EditCustomAttributes = "";
+        $this->precio2->EditValue = $this->precio2->CurrentValue;
+        $this->precio2->PlaceHolder = RemoveHtml($this->precio2->caption());
+        if (strval($this->precio2->EditValue) != "" && is_numeric($this->precio2->EditValue)) {
+            $this->precio2->EditValue = FormatNumber($this->precio2->EditValue, -2, -2, -2, -2);
+        }
+
         // codigo_ims
         $this->codigo_ims->EditAttrs["class"] = "form-control";
         $this->codigo_ims->EditCustomAttributes = "";
@@ -1200,12 +1232,14 @@ SORTHTML;
                     $doc->exportCaption($this->fabricante);
                     $doc->exportCaption($this->articulo);
                     $doc->exportCaption($this->precio);
+                    $doc->exportCaption($this->precio2);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->tarifa);
                     $doc->exportCaption($this->fabricante);
                     $doc->exportCaption($this->articulo);
                     $doc->exportCaption($this->precio);
+                    $doc->exportCaption($this->precio2);
                     $doc->exportCaption($this->codigo_ims);
                 }
                 $doc->endExportRow();
@@ -1239,12 +1273,14 @@ SORTHTML;
                         $doc->exportField($this->fabricante);
                         $doc->exportField($this->articulo);
                         $doc->exportField($this->precio);
+                        $doc->exportField($this->precio2);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->tarifa);
                         $doc->exportField($this->fabricante);
                         $doc->exportField($this->articulo);
                         $doc->exportField($this->precio);
+                        $doc->exportField($this->precio2);
                         $doc->exportField($this->codigo_ims);
                     }
                     $doc->endExportRow($rowCnt);

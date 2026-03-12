@@ -56,6 +56,9 @@ $Page->showMessage();
 <?php if ($Page->precio->Visible) { // precio ?>
         <th class="<?= $Page->precio->headerCellClass() ?>"><span id="elh_tarifa_articulo_precio" class="tarifa_articulo_precio"><?= $Page->precio->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->precio2->Visible) { // precio2 ?>
+        <th class="<?= $Page->precio2->headerCellClass() ?>"><span id="elh_tarifa_articulo_precio2" class="tarifa_articulo_precio2"><?= $Page->precio2->caption() ?></span></th>
+<?php } ?>
     </tr>
     </thead>
     <tbody>
@@ -106,6 +109,14 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_tarifa_articulo_precio" class="tarifa_articulo_precio">
 <span<?= $Page->precio->viewAttributes() ?>>
 <?= $Page->precio->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->precio2->Visible) { // precio2 ?>
+        <td <?= $Page->precio2->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_tarifa_articulo_precio2" class="tarifa_articulo_precio2">
+<span<?= $Page->precio2->viewAttributes() ?>>
+<?= $Page->precio2->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

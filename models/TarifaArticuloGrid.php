@@ -518,6 +518,7 @@ class TarifaArticuloGrid extends TarifaArticulo
         $this->fabricante->setVisibility();
         $this->articulo->setVisibility();
         $this->precio->setVisibility();
+        $this->precio2->setVisibility();
         $this->codigo_ims->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -706,6 +707,7 @@ class TarifaArticuloGrid extends TarifaArticulo
     protected function clearInlineMode()
     {
         $this->precio->FormValue = ""; // Clear form value
+        $this->precio2->FormValue = ""; // Clear form value
         $this->LastAction = $this->CurrentAction; // Save last action
         $this->CurrentAction = ""; // Clear action
         $_SESSION[SESSION_INLINE_MODE] = ""; // Clear inline mode
@@ -975,6 +977,9 @@ class TarifaArticuloGrid extends TarifaArticulo
         if ($CurrentForm->hasValue("x_precio") && $CurrentForm->hasValue("o_precio") && $this->precio->CurrentValue != $this->precio->OldValue) {
             return false;
         }
+        if ($CurrentForm->hasValue("x_precio2") && $CurrentForm->hasValue("o_precio2") && $this->precio2->CurrentValue != $this->precio2->OldValue) {
+            return false;
+        }
         return true;
     }
 
@@ -1060,6 +1065,7 @@ class TarifaArticuloGrid extends TarifaArticulo
         $this->fabricante->clearErrorMessage();
         $this->articulo->clearErrorMessage();
         $this->precio->clearErrorMessage();
+        $this->precio2->clearErrorMessage();
     }
 
     // Set up sort parameters
@@ -1316,6 +1322,8 @@ class TarifaArticuloGrid extends TarifaArticulo
         $this->articulo->OldValue = $this->articulo->CurrentValue;
         $this->precio->CurrentValue = null;
         $this->precio->OldValue = $this->precio->CurrentValue;
+        $this->precio2->CurrentValue = null;
+        $this->precio2->OldValue = $this->precio2->CurrentValue;
         $this->codigo_ims->CurrentValue = null;
         $this->codigo_ims->OldValue = $this->codigo_ims->CurrentValue;
     }
@@ -1379,6 +1387,19 @@ class TarifaArticuloGrid extends TarifaArticulo
             $this->precio->setOldValue($CurrentForm->getValue("o_precio"));
         }
 
+        // Check field name 'precio2' first before field var 'x_precio2'
+        $val = $CurrentForm->hasValue("precio2") ? $CurrentForm->getValue("precio2") : $CurrentForm->getValue("x_precio2");
+        if (!$this->precio2->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->precio2->Visible = false; // Disable update for API request
+            } else {
+                $this->precio2->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_precio2")) {
+            $this->precio2->setOldValue($CurrentForm->getValue("o_precio2"));
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
@@ -1397,6 +1418,7 @@ class TarifaArticuloGrid extends TarifaArticulo
         $this->fabricante->CurrentValue = $this->fabricante->FormValue;
         $this->articulo->CurrentValue = $this->articulo->FormValue;
         $this->precio->CurrentValue = $this->precio->FormValue;
+        $this->precio2->CurrentValue = $this->precio2->FormValue;
     }
 
     // Load recordset
@@ -1472,6 +1494,7 @@ class TarifaArticuloGrid extends TarifaArticulo
         $this->fabricante->setDbValue($row['fabricante']);
         $this->articulo->setDbValue($row['articulo']);
         $this->precio->setDbValue($row['precio']);
+        $this->precio2->setDbValue($row['precio2']);
         $this->codigo_ims->setDbValue($row['codigo_ims']);
     }
 
@@ -1485,6 +1508,7 @@ class TarifaArticuloGrid extends TarifaArticulo
         $row['fabricante'] = $this->fabricante->CurrentValue;
         $row['articulo'] = $this->articulo->CurrentValue;
         $row['precio'] = $this->precio->CurrentValue;
+        $row['precio2'] = $this->precio2->CurrentValue;
         $row['codigo_ims'] = $this->codigo_ims->CurrentValue;
         return $row;
     }
@@ -1521,6 +1545,11 @@ class TarifaArticuloGrid extends TarifaArticulo
             $this->precio->CurrentValue = ConvertToFloatString($this->precio->CurrentValue);
         }
 
+        // Convert decimal values if posted back
+        if ($this->precio2->FormValue == $this->precio2->CurrentValue && is_numeric(ConvertToFloatString($this->precio2->CurrentValue))) {
+            $this->precio2->CurrentValue = ConvertToFloatString($this->precio2->CurrentValue);
+        }
+
         // Call Row_Rendering event
         $this->rowRendering();
 
@@ -1535,6 +1564,8 @@ class TarifaArticuloGrid extends TarifaArticulo
         // articulo
 
         // precio
+
+        // precio2
 
         // codigo_ims
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -1618,6 +1649,11 @@ class TarifaArticuloGrid extends TarifaArticulo
             $this->precio->ViewValue = FormatNumber($this->precio->ViewValue, 2, -1, -1, -1);
             $this->precio->ViewCustomAttributes = "";
 
+            // precio2
+            $this->precio2->ViewValue = $this->precio2->CurrentValue;
+            $this->precio2->ViewValue = FormatNumber($this->precio2->ViewValue, 2, -2, -2, -2);
+            $this->precio2->ViewCustomAttributes = "";
+
             // codigo_ims
             $this->codigo_ims->ViewValue = $this->codigo_ims->CurrentValue;
             $this->codigo_ims->ViewCustomAttributes = "";
@@ -1641,6 +1677,11 @@ class TarifaArticuloGrid extends TarifaArticulo
             $this->precio->LinkCustomAttributes = "";
             $this->precio->HrefValue = "";
             $this->precio->TooltipValue = "";
+
+            // precio2
+            $this->precio2->LinkCustomAttributes = "";
+            $this->precio2->HrefValue = "";
+            $this->precio2->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // tarifa
             $this->tarifa->EditAttrs["class"] = "form-control";
@@ -1779,6 +1820,16 @@ class TarifaArticuloGrid extends TarifaArticulo
                 $this->precio->OldValue = $this->precio->EditValue;
             }
 
+            // precio2
+            $this->precio2->EditAttrs["class"] = "form-control";
+            $this->precio2->EditCustomAttributes = "";
+            $this->precio2->EditValue = HtmlEncode($this->precio2->CurrentValue);
+            $this->precio2->PlaceHolder = RemoveHtml($this->precio2->caption());
+            if (strval($this->precio2->EditValue) != "" && is_numeric($this->precio2->EditValue)) {
+                $this->precio2->EditValue = FormatNumber($this->precio2->EditValue, -2, -2, -2, -2);
+                $this->precio2->OldValue = $this->precio2->EditValue;
+            }
+
             // Add refer script
 
             // tarifa
@@ -1796,6 +1847,10 @@ class TarifaArticuloGrid extends TarifaArticulo
             // precio
             $this->precio->LinkCustomAttributes = "";
             $this->precio->HrefValue = "";
+
+            // precio2
+            $this->precio2->LinkCustomAttributes = "";
+            $this->precio2->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // tarifa
             $this->tarifa->EditAttrs["class"] = "form-control";
@@ -1934,6 +1989,16 @@ class TarifaArticuloGrid extends TarifaArticulo
                 $this->precio->OldValue = $this->precio->EditValue;
             }
 
+            // precio2
+            $this->precio2->EditAttrs["class"] = "form-control";
+            $this->precio2->EditCustomAttributes = "";
+            $this->precio2->EditValue = HtmlEncode($this->precio2->CurrentValue);
+            $this->precio2->PlaceHolder = RemoveHtml($this->precio2->caption());
+            if (strval($this->precio2->EditValue) != "" && is_numeric($this->precio2->EditValue)) {
+                $this->precio2->EditValue = FormatNumber($this->precio2->EditValue, -2, -2, -2, -2);
+                $this->precio2->OldValue = $this->precio2->EditValue;
+            }
+
             // Edit refer script
 
             // tarifa
@@ -1951,6 +2016,10 @@ class TarifaArticuloGrid extends TarifaArticulo
             // precio
             $this->precio->LinkCustomAttributes = "";
             $this->precio->HrefValue = "";
+
+            // precio2
+            $this->precio2->LinkCustomAttributes = "";
+            $this->precio2->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1993,6 +2062,14 @@ class TarifaArticuloGrid extends TarifaArticulo
         }
         if (!CheckNumber($this->precio->FormValue)) {
             $this->precio->addErrorMessage($this->precio->getErrorMessage(false));
+        }
+        if ($this->precio2->Required) {
+            if (!$this->precio2->IsDetailKey && EmptyValue($this->precio2->FormValue)) {
+                $this->precio2->addErrorMessage(str_replace("%s", $this->precio2->caption(), $this->precio2->RequiredErrorMessage));
+            }
+        }
+        if (!CheckNumber($this->precio2->FormValue)) {
+            $this->precio2->addErrorMessage($this->precio2->getErrorMessage(false));
         }
 
         // Return validate result
@@ -2121,6 +2198,9 @@ class TarifaArticuloGrid extends TarifaArticulo
             // precio
             $this->precio->setDbValueDef($rsnew, $this->precio->CurrentValue, null, $this->precio->ReadOnly);
 
+            // precio2
+            $this->precio2->setDbValueDef($rsnew, $this->precio2->CurrentValue, null, $this->precio2->ReadOnly);
+
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
             if ($updateRow) {
@@ -2193,6 +2273,9 @@ class TarifaArticuloGrid extends TarifaArticulo
 
         // precio
         $this->precio->setDbValueDef($rsnew, $this->precio->CurrentValue, null, false);
+
+        // precio2
+        $this->precio2->setDbValueDef($rsnew, $this->precio2->CurrentValue, null, false);
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);

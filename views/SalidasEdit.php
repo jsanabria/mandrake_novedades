@@ -739,5 +739,76 @@ loadjs.ready("load", function () {
     	.always(function(data) {
     	});
     });
+
+    // Usamos el selector de PHPMaker para el campo pago_divisa
+    $("#x_pago_divisa").on("change", function() {
+        var valor = $(this).val();
+
+        // Verifica si el valor es "S" o el que desees para bloquearlo
+        if (valor === "S" || valor === "N") { 
+            $(this).prop("disabled", true); // Bloquea el control
+
+            // Opcional: PHPMaker recomienda usar .readonly() si usas librerías Select2
+            // $(this).attr("readonly", "readonly"); 
+            console.log("Campo pago_divisa bloqueado por selección.");
+        }
+    });
+
+    //////////////////////////////////////////////////////////////////////////////////
+    // Aseguramos que la función seleccionarPrecio esté disponible
+    // 1. Monitorear el cambio del artículo (Evento oficial de PHPMaker)
+    $(document).on("change", "input[id*='_cantidad_articulo']", function() {
+        var $el = $(this);
+        var cantidad = $el.val();
+        var idFull = $el.attr("id"); 
+        var rowIdx = idFull.replace(/[^0-9]/g, '');
+        var idArticulo = $("#x" + rowIdx + "_articulo").val();
+
+        // Si hay artículo y ya pusieron una cantidad, lanzamos el modal
+        if (idArticulo && cantidad > 0) {
+            seleccionarPrecio(rowIdx, idArticulo);
+        }
+    });
+
+    // 2. Función de selección de precios
+    function seleccionarPrecio(rowIdx, idArticulo) {
+        var pagoDivisa = $("#x_pago_divisa").val(); 
+        $.get("include/get_precios.php?id=" + idArticulo, function(data) {
+            var precios = JSON.parse(data);
+            if (!precios) return;
+            Swal.fire({
+                title: 'Seleccione un Precio',
+                html: `
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-primary btn-lg btn-precio" 
+                            data-valor="${precios.precio}" ${pagoDivisa === 'S' ? 'disabled' : ''}>
+                            Precio a pagar por unidad en Bs.: ${precios.precio}
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-lg btn-precio" 
+                            data-valor="${precios.precio2}" ${pagoDivisa !== 'S' ? 'disabled' : ''}>
+                            Precio a pagar por unidad USD: ${precios.precio2}
+                        </button>
+                    </div>
+                `,
+                showConfirmButton: false,
+                didOpen: () => {
+    // Dentro de .btn-precio click:
+    $(".btn-precio").on("click", function() {
+        var precioElegido = $(this).data("valor");
+        var $inputPrecio = $("#x" + rowIdx + "_precio_unidad");
+
+        // 1. Asignamos y disparamos tus validaciones (AJAX Clave, etc.)
+        // $inputPrecio.val(precioElegido).trigger("change");
+        Swal.close();
+
+        // 2. Foco de vuelta al precio para edición final
+        setTimeout(function() {
+            $inputPrecio.focus().select();
+        }, 300);
+    });             
+                }
+            });
+        });
+    }
 });
 </script>

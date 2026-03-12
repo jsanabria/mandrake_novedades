@@ -16,11 +16,12 @@ $porc = floatval(ExecuteScalar($sql));
 $sql = "UPDATE 
 			tarifa_articulo AS a 
 				JOIN 
-			(SELECT fabricante, articulo, precio FROM tarifa_articulo
+			(SELECT fabricante, articulo, precio, precio2 FROM tarifa_articulo 
 			WHERE tarifa = $patron) AS b 
 				ON b.fabricante = a.fabricante AND b.articulo = a.articulo 
 		SET 
-			a.precio = ROUND((b.precio + (b.precio * ($porc/100))), 2) 
+			a.precio = ROUND((b.precio + (b.precio * ($porc/100))), 2),
+			a.precio2 = ROUND((b.precio2 + (b.precio2 * ($porc/100))), 2)
 		WHERE a.tarifa = $id;";
 Execute($sql);
 

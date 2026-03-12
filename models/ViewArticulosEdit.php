@@ -483,6 +483,7 @@ class ViewArticulosEdit extends ViewArticulos
         $this->cantidad_en_mano->setVisibility();
         $this->ultimo_costo->setVisibility();
         $this->precio->setVisibility();
+        $this->precio2->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -776,6 +777,16 @@ class ViewArticulosEdit extends ViewArticulos
             }
         }
 
+        // Check field name 'precio2' first before field var 'x_precio2'
+        $val = $CurrentForm->hasValue("precio2") ? $CurrentForm->getValue("precio2") : $CurrentForm->getValue("x_precio2");
+        if (!$this->precio2->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->precio2->Visible = false; // Disable update for API request
+            } else {
+                $this->precio2->setFormValue($val);
+            }
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey) {
@@ -795,6 +806,7 @@ class ViewArticulosEdit extends ViewArticulos
         $this->cantidad_en_mano->CurrentValue = $this->cantidad_en_mano->FormValue;
         $this->ultimo_costo->CurrentValue = $this->ultimo_costo->FormValue;
         $this->precio->CurrentValue = $this->precio->FormValue;
+        $this->precio2->CurrentValue = $this->precio2->FormValue;
     }
 
     // Load recordset
@@ -873,6 +885,7 @@ class ViewArticulosEdit extends ViewArticulos
         $this->cantidad_en_mano->setDbValue($row['cantidad_en_mano']);
         $this->ultimo_costo->setDbValue($row['ultimo_costo']);
         $this->precio->setDbValue($row['precio']);
+        $this->precio2->setDbValue($row['precio2']);
     }
 
     // Return a row with default values
@@ -887,6 +900,7 @@ class ViewArticulosEdit extends ViewArticulos
         $row['cantidad_en_mano'] = null;
         $row['ultimo_costo'] = null;
         $row['precio'] = null;
+        $row['precio2'] = null;
         return $row;
     }
 
@@ -928,6 +942,11 @@ class ViewArticulosEdit extends ViewArticulos
             $this->precio->CurrentValue = ConvertToFloatString($this->precio->CurrentValue);
         }
 
+        // Convert decimal values if posted back
+        if ($this->precio2->FormValue == $this->precio2->CurrentValue && is_numeric(ConvertToFloatString($this->precio2->CurrentValue))) {
+            $this->precio2->CurrentValue = ConvertToFloatString($this->precio2->CurrentValue);
+        }
+
         // Call Row_Rendering event
         $this->rowRendering();
 
@@ -948,6 +967,8 @@ class ViewArticulosEdit extends ViewArticulos
         // ultimo_costo
 
         // precio
+
+        // precio2
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -1001,6 +1022,11 @@ class ViewArticulosEdit extends ViewArticulos
             $this->precio->ViewValue = FormatNumber($this->precio->ViewValue, 2, -2, -2, -2);
             $this->precio->ViewCustomAttributes = "";
 
+            // precio2
+            $this->precio2->ViewValue = $this->precio2->CurrentValue;
+            $this->precio2->ViewValue = FormatNumber($this->precio2->ViewValue, 2, -2, -2, -2);
+            $this->precio2->ViewCustomAttributes = "";
+
             // referencia
             $this->referencia->LinkCustomAttributes = "";
             $this->referencia->HrefValue = "";
@@ -1035,6 +1061,11 @@ class ViewArticulosEdit extends ViewArticulos
             $this->precio->LinkCustomAttributes = "";
             $this->precio->HrefValue = "";
             $this->precio->TooltipValue = "";
+
+            // precio2
+            $this->precio2->LinkCustomAttributes = "";
+            $this->precio2->HrefValue = "";
+            $this->precio2->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // referencia
             $this->referencia->EditAttrs["class"] = "form-control";
@@ -1102,6 +1133,15 @@ class ViewArticulosEdit extends ViewArticulos
                 $this->precio->EditValue = FormatNumber($this->precio->EditValue, -2, -2, -2, -2);
             }
 
+            // precio2
+            $this->precio2->EditAttrs["class"] = "form-control";
+            $this->precio2->EditCustomAttributes = "";
+            $this->precio2->EditValue = HtmlEncode($this->precio2->CurrentValue);
+            $this->precio2->PlaceHolder = RemoveHtml($this->precio2->caption());
+            if (strval($this->precio2->EditValue) != "" && is_numeric($this->precio2->EditValue)) {
+                $this->precio2->EditValue = FormatNumber($this->precio2->EditValue, -2, -2, -2, -2);
+            }
+
             // Edit refer script
 
             // referencia
@@ -1136,6 +1176,10 @@ class ViewArticulosEdit extends ViewArticulos
             // precio
             $this->precio->LinkCustomAttributes = "";
             $this->precio->HrefValue = "";
+
+            // precio2
+            $this->precio2->LinkCustomAttributes = "";
+            $this->precio2->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1197,6 +1241,14 @@ class ViewArticulosEdit extends ViewArticulos
         if (!CheckNumber($this->precio->FormValue)) {
             $this->precio->addErrorMessage($this->precio->getErrorMessage(false));
         }
+        if ($this->precio2->Required) {
+            if (!$this->precio2->IsDetailKey && EmptyValue($this->precio2->FormValue)) {
+                $this->precio2->addErrorMessage(str_replace("%s", $this->precio2->caption(), $this->precio2->RequiredErrorMessage));
+            }
+        }
+        if (!CheckNumber($this->precio2->FormValue)) {
+            $this->precio2->addErrorMessage($this->precio2->getErrorMessage(false));
+        }
 
         // Return validate result
         $validateForm = !$this->hasInvalidFields();
@@ -1234,6 +1286,9 @@ class ViewArticulosEdit extends ViewArticulos
 
             // precio
             $this->precio->setDbValueDef($rsnew, $this->precio->CurrentValue, 0, $this->precio->ReadOnly);
+
+            // precio2
+            $this->precio2->setDbValueDef($rsnew, $this->precio2->CurrentValue, 0, $this->precio2->ReadOnly);
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);

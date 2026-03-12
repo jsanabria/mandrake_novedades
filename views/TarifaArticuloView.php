@@ -78,6 +78,17 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->precio2->Visible) { // precio2 ?>
+    <tr id="r_precio2">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_tarifa_articulo_precio2"><?= $Page->precio2->caption() ?></span></td>
+        <td data-name="precio2" <?= $Page->precio2->cellAttributes() ?>>
+<span id="el_tarifa_articulo_precio2">
+<span<?= $Page->precio2->viewAttributes() ?>>
+<?= $Page->precio2->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 </table>
 </form>
 <?php

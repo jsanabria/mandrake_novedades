@@ -1337,8 +1337,8 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew) {
     	//echo "Row Inserted"
     	$sql = "INSERT INTO tarifa_articulo
-    				(id, tarifa, fabricante, articulo, precio)
-    			SELECT NULL, " . $rsnew["id"] . ", fabricante, id, 0.00
+    				(id, tarifa, fabricante, articulo, precio, precio2)
+    			SELECT NULL, " . $rsnew["id"] . ", fabricante, id, 0.00, 0.00
     			FROM articulo";
     	Execute($sql);
     }

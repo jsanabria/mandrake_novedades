@@ -219,6 +219,17 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->precio2->Visible) { // precio2 ?>
+    <tr id="r_precio2">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_articulo_precio2"><?= $Page->precio2->caption() ?></span></td>
+        <td data-name="precio2" <?= $Page->precio2->cellAttributes() ?>>
+<span id="el_articulo_precio2">
+<span<?= $Page->precio2->viewAttributes() ?>>
+<?= $Page->precio2->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->alicuota->Visible) { // alicuota ?>
     <tr id="r_alicuota">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_articulo_alicuota"><?= $Page->alicuota->caption() ?></span></td>

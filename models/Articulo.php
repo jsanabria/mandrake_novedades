@@ -57,6 +57,7 @@ class Articulo extends DbTable
     public $ultimo_costo;
     public $descuento;
     public $precio;
+    public $precio2;
     public $alicuota;
     public $articulo_inventario;
     public $activo;
@@ -277,6 +278,15 @@ class Articulo extends DbTable
         $this->precio->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
         $this->precio->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->precio->Param, "CustomMsg");
         $this->Fields['precio'] = &$this->precio;
+
+        // precio2
+        $this->precio2 = new DbField('articulo', 'articulo', 'x_precio2', 'precio2', '`precio2`', '`precio2`', 131, 14, -1, false, '`precio2`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->precio2->Nullable = false; // NOT NULL field
+        $this->precio2->Sortable = true; // Allow sort
+        $this->precio2->DefaultDecimalPrecision = 2; // Default decimal precision
+        $this->precio2->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
+        $this->precio2->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->precio2->Param, "CustomMsg");
+        $this->Fields['precio2'] = &$this->precio2;
 
         // alicuota
         $this->alicuota = new DbField('articulo', 'articulo', 'x_alicuota', 'alicuota', '`alicuota`', '`alicuota`', 200, 3, -1, false, '`alicuota`', false, false, false, 'FORMATTED TEXT', 'SELECT');
@@ -916,6 +926,7 @@ class Articulo extends DbTable
         $this->ultimo_costo->DbValue = $row['ultimo_costo'];
         $this->descuento->DbValue = $row['descuento'];
         $this->precio->DbValue = $row['precio'];
+        $this->precio2->DbValue = $row['precio2'];
         $this->alicuota->DbValue = $row['alicuota'];
         $this->articulo_inventario->DbValue = $row['articulo_inventario'];
         $this->activo->DbValue = $row['activo'];
@@ -1278,6 +1289,7 @@ SORTHTML;
         $this->ultimo_costo->setDbValue($row['ultimo_costo']);
         $this->descuento->setDbValue($row['descuento']);
         $this->precio->setDbValue($row['precio']);
+        $this->precio2->setDbValue($row['precio2']);
         $this->alicuota->setDbValue($row['alicuota']);
         $this->articulo_inventario->setDbValue($row['articulo_inventario']);
         $this->activo->setDbValue($row['activo']);
@@ -1337,6 +1349,8 @@ SORTHTML;
         // descuento
 
         // precio
+
+        // precio2
 
         // alicuota
 
@@ -1547,6 +1561,11 @@ SORTHTML;
         $this->precio->ViewValue = FormatNumber($this->precio->ViewValue, 2, -1, -1, -1);
         $this->precio->ViewCustomAttributes = "";
 
+        // precio2
+        $this->precio2->ViewValue = $this->precio2->CurrentValue;
+        $this->precio2->ViewValue = FormatNumber($this->precio2->ViewValue, 2, -2, -2, -2);
+        $this->precio2->ViewCustomAttributes = "";
+
         // alicuota
         $curVal = trim(strval($this->alicuota->CurrentValue));
         if ($curVal != "") {
@@ -1726,6 +1745,11 @@ SORTHTML;
         $this->precio->LinkCustomAttributes = "";
         $this->precio->HrefValue = "";
         $this->precio->TooltipValue = "";
+
+        // precio2
+        $this->precio2->LinkCustomAttributes = "";
+        $this->precio2->HrefValue = "";
+        $this->precio2->TooltipValue = "";
 
         // alicuota
         $this->alicuota->LinkCustomAttributes = "";
@@ -1944,6 +1968,15 @@ SORTHTML;
             $this->precio->EditValue = FormatNumber($this->precio->EditValue, -2, -1, -2, -1);
         }
 
+        // precio2
+        $this->precio2->EditAttrs["class"] = "form-control";
+        $this->precio2->EditCustomAttributes = "";
+        $this->precio2->EditValue = $this->precio2->CurrentValue;
+        $this->precio2->PlaceHolder = RemoveHtml($this->precio2->caption());
+        if (strval($this->precio2->EditValue) != "" && is_numeric($this->precio2->EditValue)) {
+            $this->precio2->EditValue = FormatNumber($this->precio2->EditValue, -2, -2, -2, -2);
+        }
+
         // alicuota
         $this->alicuota->EditAttrs["class"] = "form-control";
         $this->alicuota->EditCustomAttributes = "";
@@ -2022,6 +2055,7 @@ SORTHTML;
                     $doc->exportCaption($this->ultimo_costo);
                     $doc->exportCaption($this->descuento);
                     $doc->exportCaption($this->precio);
+                    $doc->exportCaption($this->precio2);
                     $doc->exportCaption($this->alicuota);
                     $doc->exportCaption($this->articulo_inventario);
                     $doc->exportCaption($this->activo);
@@ -2049,6 +2083,7 @@ SORTHTML;
                     $doc->exportCaption($this->ultimo_costo);
                     $doc->exportCaption($this->descuento);
                     $doc->exportCaption($this->precio);
+                    $doc->exportCaption($this->precio2);
                     $doc->exportCaption($this->alicuota);
                     $doc->exportCaption($this->articulo_inventario);
                     $doc->exportCaption($this->activo);
@@ -2099,6 +2134,7 @@ SORTHTML;
                         $doc->exportField($this->ultimo_costo);
                         $doc->exportField($this->descuento);
                         $doc->exportField($this->precio);
+                        $doc->exportField($this->precio2);
                         $doc->exportField($this->alicuota);
                         $doc->exportField($this->articulo_inventario);
                         $doc->exportField($this->activo);
@@ -2126,6 +2162,7 @@ SORTHTML;
                         $doc->exportField($this->ultimo_costo);
                         $doc->exportField($this->descuento);
                         $doc->exportField($this->precio);
+                        $doc->exportField($this->precio2);
                         $doc->exportField($this->alicuota);
                         $doc->exportField($this->articulo_inventario);
                         $doc->exportField($this->activo);

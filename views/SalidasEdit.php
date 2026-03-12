@@ -754,6 +754,7 @@ loadjs.ready("load", function () {
         }
     });
 
+    /*
     //////////////////////////////////////////////////////////////////////////////////
     // Aseguramos que la función seleccionarPrecio esté disponible
     // 1. Monitorear el cambio del artículo (Evento oficial de PHPMaker)
@@ -810,5 +811,6 @@ loadjs.ready("load", function () {
             });
         });
     }
+    */
 });
 </script>

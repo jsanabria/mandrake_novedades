@@ -755,7 +755,7 @@ class CobrosClienteDelete extends CobrosCliente
                 if ($this->tipo_pago->ViewValue === null) { // Lookup from database
                     $filterWrk = "`valor1`" . SearchString("=", $curVal, DATATYPE_STRING, "");
                     $lookupFilter = function() {
-                        return ($_REQUEST["pago_divisa"] == "S") 
+                        return ($_REQUEST["pago_divisa"] ?? "N" == "S") 
                 ? "`codigo` = '009' AND valor1 IN ('EF','RD','ZL')" 
                 : (isset($_REQUEST["dsc"]) 
                     ? ($_REQUEST["dsc"] >= 25 
@@ -953,7 +953,7 @@ class CobrosClienteDelete extends CobrosCliente
                     break;
                 case "x_tipo_pago":
                     $lookupFilter = function () {
-                        return ($_REQUEST["pago_divisa"] == "S") 
+                        return ($_REQUEST["pago_divisa"] ?? "N" == "S") 
     ? "`codigo` = '009' AND valor1 IN ('EF','RD','ZL')" 
     : (isset($_REQUEST["dsc"]) 
         ? ($_REQUEST["dsc"] >= 25 

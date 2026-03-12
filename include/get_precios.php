@@ -11,7 +11,7 @@ if ($id_articulo != "") {
     // 2. Ejecutar consulta y capturar el resultado
     $sql = "SELECT 
                 ROUND((precio - (precio * (descuento/100))), 2) AS precio, 
-                ROUND((precio2 - (precio2 * (descuento/100))), 2) AS precio2 FROM articulo WHERE id = " . $id_seguro;
+                precio2 FROM articulo WHERE id = " . $id_seguro;
     $rs = mysqli_query($link, $sql);
 
     // 3. Validar: ¿La consulta fue exitosa?

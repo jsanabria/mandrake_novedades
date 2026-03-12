@@ -635,6 +635,7 @@ loadjs.ready("load", function () {
     // Ejecutar al cargar (con un pequeño delay por seguridad)
     setTimeout(forzarBloqueoSelect2, 500);
 
+    /*
     //////////////////////////////////////////////////////////////////////////////////
     // Aseguramos que la función seleccionarPrecio esté disponible
     // 1. Monitorear el cambio del artículo (Evento oficial de PHPMaker)
@@ -691,5 +692,6 @@ loadjs.ready("load", function () {
             });
         });
     }
+    */
 });
 </script>

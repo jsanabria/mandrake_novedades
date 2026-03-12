@@ -26,7 +26,7 @@ else
 
 $sql = "SELECT 
 			ABS(IFNULL(a.precio, 0))-(ABS(IFNULL(a.precio, 0))*(b.descuento/100)) AS precio, 
-			ABS(IFNULL(a.precio2, 0))-(ABS(IFNULL(a.precio2, 0))*(b.descuento/100)) AS precio2, 
+			a.precio2, 
 			b.descuento 
 		FROM tarifa_articulo AS a JOIN articulo AS b ON b.id = a.articulo 
 		WHERE a.articulo = $articulo AND a.tarifa = $tarifa;"; 
